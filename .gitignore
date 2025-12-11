@@ -1,3 +1,42 @@
+.DS_Store
+Thumbs.db
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment / secrets
+.env
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# Node / Next.js
+node_modules/
+.next/
+.turbo/
+
+# IDE / tooling
+.idea/
+.vscode/
+
+# Logs and coverage
+*.log
+coverage/
+coverage.xml
+.coverage
+
+# Build artifacts
+dist/
+build/
+
+# Misc
+*.sqlite3
 # Node.js
 node_modules/
 npm-debug.log*

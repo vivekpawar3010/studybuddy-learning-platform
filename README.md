@@ -1,91 +1,90 @@
-# ```markdown
+# StudyBuddy Learning Platform
 
-# StudyBuddy – Week 1 Completion Report
-
-This document highlights the completion of **Week 1** for the StudyBuddy project.
-The goal of this week was to set up the full development environment including the frontend, backend, database, and repository structure.
+Full-stack learning platform with **Next.js** frontend and **FastAPI** backend. Backend is wired for Supabase/PostgreSQL via SQLAlchemy with a `/db-check` endpoint to verify connectivity.
 
 ---
 
-## ✅ Week 1 – What Was Completed
-
-### **1. GitHub Repository Setup**
-
-* Created main repo: `studybuddy-ai`
-* Added base folder structure:
-
-  ```
-  /frontend
-  /backend
-  /docs
-  ```
-* Added `.gitignore` for Node.js + Python
-* Included initial README file
-
----
-
-### **2. Frontend Initialization (Next.js + Tailwind CSS)**
-
-* Initialized a new Next.js project
-* Installed and configured Tailwind CSS
-* Verified development server runs on **[http://localhost:3000](http://localhost:3000)**
-
----
-
-### **3. Backend Initialization (FastAPI)**
-
-* Created FastAPI project structure
-* Added basic API endpoint (`/`)
-* Tested backend server on **[http://localhost:8000](http://localhost:8000)**
-* Confirmed Swagger UI working at `/docs`
-
----
-
-### **4. Database Setup (Supabase PostgreSQL)**
-
-* Created a new Supabase project
-* Retrieved and configured PostgreSQL connection string
-* Implemented DB connection file (`db.py`)
-* Added `/db-check` endpoint to ensure successful database connection
-
----
-
-### **5. Documentation Setup**
-
-* Created `/docs` folder for reports, diagrams, and future documentation
-* Added `WEEK1_COMPLETE.md` summarizing all work done
-
----
-
-## 📌 Status
-
-✔ **Week 1 is successfully completed.**
-The full development environment is now ready for Week 2 (Authentication module).
-
----
-
-## 📁 Repository Structure (After Week 1)
+## Project Structure
 
 ```
-studybuddy-ai/
-│
-├── frontend/        # Next.js + Tailwind project
-├── backend/         # FastAPI backend
-├── docs/            # Documentation folder
-└── README.md        # Project overview
+studybuddy-learning-platform/
+├── frontend/      # Next.js 16 + Tailwind
+├── backend/       # FastAPI + SQLAlchemy + Pydantic
+├── docs/          # Documentation assets
+├── 15weeksPlan.md # Long-term roadmap (kept as-is)
+└── README.md      # You are here
 ```
 
 ---
 
-## 🚀 Next Steps (Week 2 Preview)
+## Prerequisites
+- Node.js 18+ and npm
+- Python 3.13
+- Supabase (or PostgreSQL) connection string
 
-* Implement Firebase Authentication
-* Create protected routes
-* Sync user profile with backend PostgreSQL
+---
+
+## Backend Setup (FastAPI)
+```bash
+cd backend
+py -3.13 -m venv .venv
+.\.venv\Scripts\activate   # Windows
+# source .venv/bin/activate # macOS/Linux
+pip install -r requirements.txt
+```
+
+Create `backend/.env` (not committed):
+```
+DATABASE_URL=postgresql://postgres:<PASSWORD>@db.<PROJECT>.supabase.co:5432/postgres
+```
+
+Run dev server:
+```bash
+.\.venv\Scripts\activate
+python -m uvicorn app.main:app --reload
+```
+- API: http://127.0.0.1:8000
+- Docs: http://127.0.0.1:8000/docs
+- DB check: http://127.0.0.1:8000/db-check
 
 ---
 
-# ```
+## Frontend Setup (Next.js)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+- App: http://localhost:3000 (Next.js may select another port if busy)
+- If multiple lockfiles warning appears, keep using `frontend/package-lock.json`; the root lockfile has been removed.
 
 ---
+
+## Environment Files
+- Backend: `backend/.env` with `DATABASE_URL`
+- Frontend (optional): `frontend/.env.local` with `NEXT_PUBLIC_API_URL=http://127.0.0.1:8000`
+
+---
+
+## Useful Scripts
+- Backend: `python -m uvicorn app.main:app --reload`, `pytest`
+- Frontend: `npm run dev`, `npm run lint`, `npm run build`
+
+---
+
+## Notes on Database Connectivity
+- `/db-check` performs a simple `SELECT 1` using `SQLAlchemy 2.0.36` + `psycopg2-binary`.
+- If you see “could not translate host name”, re-check your `DATABASE_URL` host format (`db.<PROJECT>.supabase.co`) and credentials.
+
+---
+
+## Cleanups Done
+- Removed unused root and backend `package-lock.json` files.
+- Replaced legacy README with this consolidated guide.
+- Added `.gitignore` for Python, Node, and environment files.
+
+---
+
+## Roadmap
+- See `15weeksPlan.md` for the detailed 15-week plan (left untouched).
 
