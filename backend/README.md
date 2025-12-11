@@ -12,11 +12,11 @@ python -m venv venv
 2. **Activate virtual environment**:
    - Windows:
      ```bash
-     .\venv\Scripts\activate
+     .\.venv\Scripts\activate
      ```
    - macOS/Linux:
      ```bash
-     source venv/bin/activate
+     source .venv/bin/activate
      ```
 
 3. **Install dependencies**:
@@ -26,7 +26,7 @@ pip install -r requirements.txt
 
 4. **Run the development server**:
 ```bash
-python -m uvicorn main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 The API will be available at `http://localhost:8000`
@@ -40,10 +40,10 @@ The API will be available at `http://localhost:8000`
 
 ```
 backend/
-├── main.py           # FastAPI application entry point
+├── main.py           # (moved) FastAPI application entrypoint now in `app/main.py`
 ├── config.py         # Configuration settings
 ├── requirements.txt  # Python dependencies
-├── venv/             # Virtual environment
+├── .venv/            # Virtual environment (rename `venv` -> `.venv`)
 └── app/              # (Future) Application modules
     ├── api/          # API routes
     ├── models/       # Database models
