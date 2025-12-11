@@ -1,4 +1,4 @@
-# ```
+# ```markdown
 
 # StudyBuddy – Week 1 Completion Report
 
