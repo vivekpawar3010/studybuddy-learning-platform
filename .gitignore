@@ -95,3 +95,5 @@ frontend/.env.local
 frontend/.env.*.local
 frontend/dist/
 
+# firebase files
+.firebase/

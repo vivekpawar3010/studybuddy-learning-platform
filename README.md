@@ -49,7 +49,7 @@ python -m uvicorn app.main:app --reload
 
 ---
 
-## Frontend Setup (Next.js)
+## Frontend Setup (Next.js + Firebase Auth)
 ```bash
 cd frontend
 npm install
@@ -58,11 +58,21 @@ npm run dev
 - App: http://localhost:3000 (Next.js may select another port if busy)
 - If multiple lockfiles warning appears, keep using `frontend/package-lock.json`; the root lockfile has been removed.
 
+### Authentication (Week 2 ✅)
+- **Firebase Authentication** enabled with Email/Password and Google Sign-In
+- **Protected routes** via Next.js middleware and ProtectedRoute component
+- **AuthContext** for global auth state management
+- **Dashboard** with user info and logout functionality
+
+For Firebase setup, see [FIREBASE_SETUP_GUIDE.md](FIREBASE_SETUP_GUIDE.md)
+For testing auth flow, see [WEEK2_TESTING_GUIDE.md](WEEK2_TESTING_GUIDE.md)
+
 ---
 
 ## Environment Files
 - Backend: `backend/.env` with `DATABASE_URL`
-- Frontend (optional): `frontend/.env.local` with `NEXT_PUBLIC_API_URL=http://127.0.0.1:8000`
+- Frontend: `frontend/.env.local` with Firebase credentials and `NEXT_PUBLIC_API_URL`
+  - **Note:** Already configured with valid Firebase project credentials
 
 ---
 
