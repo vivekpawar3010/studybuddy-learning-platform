@@ -4,7 +4,9 @@ StudyBuddy API — application entrypoint moved to `app.main`.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.config import ALLOWED_ORIGINS, DEBUG
 from app.db import engine
+from sqlalchemy import text
 
 app = FastAPI(
     title="StudyBuddy API",
@@ -12,13 +14,13 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Configure CORS for frontend communication
+# Configure CORS for frontend communication (restricted origins for security)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure for production with specific origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,  # Restricted to specific origins (see config.py)
+    allow_credentials=False,  # Disable credentials with restricted origins for security
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Explicit methods only
+    allow_headers=["Content-Type", "Authorization"],  # Explicit headers only
 )
 
 
@@ -43,7 +45,7 @@ def db_check():
     """Check database connectivity."""
     try:
         with engine.connect() as connection:
-            connection.execute("SELECT 1")
+            connection.execute(text("SELECT 1"))
         return {"status": "connected", "message": "Database connection successful"}
     except Exception as exc:  # noqa: BLE001 broad catch for simple health endpoint
         return {"status": "failed", "message": f"Database connection failed: {exc}"}
