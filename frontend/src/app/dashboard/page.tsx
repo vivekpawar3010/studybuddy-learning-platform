@@ -5,10 +5,47 @@ import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useEffect, useState } from "react";
+import api from "@/lib/api";
+
+interface UserProfile {
+  id: number;
+  email: string;
+  role: string | null;
+}
 
 function DashboardContent() {
   const { user } = useAuth();
   const router = useRouter();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkUserRole = async () => {
+      try {
+        const response = await api.get('/api/v1/users/me');
+        const userProfile = response.data;
+        setProfile(userProfile);
+
+        // Redirect to role selection if role is not set
+        if (userProfile.role === null) {
+          router.push('/select-role');
+          return;
+        }
+      } catch (err) {
+        console.error('Error fetching user profile:', err);
+        // If we can't fetch profile, redirect to login
+        router.push('/login');
+        return;
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      checkUserRole();
+    }
+  }, [user, router]);
 
   const handleLogout = async () => {
     try {
@@ -18,6 +55,22 @@ function DashboardContent() {
       console.error("Failed to logout:", error);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent mx-auto"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If role is null, this component won't render due to redirect
+  if (!profile || profile.role === null) {
+    return null;
+  }
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -33,6 +86,14 @@ function DashboardContent() {
           >
             Dashboard
           </a>
+          {profile.role === 'teacher' && (
+            <a
+              href="/tests/create"
+              className="block rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50"
+            >
+              Create Test
+            </a>
+          )}
           <a
             href="/courses"
             className="block rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50"
@@ -44,6 +105,12 @@ function DashboardContent() {
             className="block rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50"
           >
             Progress
+          </a>
+          <a
+            href="/profile"
+            className="block rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-50"
+          >
+            Profile
           </a>
           <a
             href="/settings"
@@ -59,8 +126,17 @@ function DashboardContent() {
         {/* Topbar */}
         <header className="bg-white shadow">
           <div className="flex items-center justify-between px-6 py-4">
-            <h2 className="text-xl font-semibold">Welcome back, {user?.email?.split("@")[0]}</h2>
+            <h2 className="text-xl font-semibold">
+              Welcome back, {user?.displayName || user?.email?.split("@")[0]}!
+            </h2>
             <div className="flex items-center gap-4">
+              <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${
+                profile.role === 'student'
+                  ? 'bg-blue-100 text-blue-800'
+                  : 'bg-green-100 text-green-800'
+              }`}>
+                {profile.role === 'student' ? 'Student' : 'Teacher'}
+              </span>
               <span className="text-sm text-gray-600">{user?.email}</span>
               <button
                 onClick={handleLogout}

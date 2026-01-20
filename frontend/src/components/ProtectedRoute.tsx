@@ -4,7 +4,12 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, ReactNode } from "react";
 
-export default function ProtectedRoute({ children }: { children: ReactNode }) {
+interface ProtectedRouteProps {
+  children: ReactNode;
+  requiredRole?: "student" | "teacher";
+}
+
+export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
