@@ -6,237 +6,131 @@
 
 **Duration:** 15 weeks
 
-**Tech Stack (Balanced):** Next.js, Tailwind CSS, FastAPI (Python), PostgreSQL (Supabase), Firebase Auth, Firebase Storage, Redis (Upstash), Gemini API, Pusher / Socket.IO (chat), Vercel (frontend), Render (backend)
+**Tech Stack:** React 18, Vite, TypeScript, Tailwind CSS v4, PostgreSQL (Supabase), Realtime WebSockets, TipTap (Rich Text), Google Gemini GenAI SDK, Vercel.
 
 ---
 
 ## Purpose
 
-This README documents the week-by-week plan to develop StudyBuddy from MVP to a deployed version over 15 weeks. Each week lists the goals, short tasks, and deliverables so you can track progress and hand over clear artifacts to your mentor.
+This document outlines the week-by-week plan to develop StudyBuddy from MVP to a deployed, production-ready version over 15 weeks. It aligns with our actual technology stack (React + Supabase) rather than the original hypothetical python backend.
 
 ---
 
 ## Prerequisites
 
-* Node.js (v16+)
-* Python 3.9+
+* Node.js (v18+)
 * Git & GitHub account
-* Supabase account (or managed PostgreSQL)
-* Firebase project (Auth + Storage)
-* Vercel account (for frontend) and Render account (for backend)
-* Gemini API access (or equivalent LLM access)
-* Redis provider (Upstash or Redis Cloud) for caching
+* Supabase account (Database, Auth, and Realtime)
+* Firebase project (optional legacy auth/storage support)
+* Google Gemini API Key
+* Vercel account (for frontend hosting)
 
 ---
 
-## How to use this README
+## Repo Structure
 
-* Follow the weekly steps in order.
-* Commit small, frequent changes to `github.com/your-repo`.
-* Create one PR per completed week with a short demo note and screenshots.
-* Keep the `README` updated with links to deployed staging URLs and any API keys reference (in private notes only).
-
----
-
-## Repo Structure (suggested)
-
-```
-/frontend    # Next.js app
-/backend     # FastAPI app
-/docs        # Architecture diagrams, reports, slides
-/migrations  # Alembic migrations
-/scripts     # helper scripts
+```text
+/                   # Project root
+├── /frontend       # Main React App (Vite base)
+│   ├── /src        # Components, hooks, utilities
+│   ├── /docs       # Comprehensive weekly logs & exports
+│   └── /scripts    # Helper python automation scripts
+├── /database       # Raw SQL schemas and seeding
+└── .env            # Environment secrets (IGNORED IN GIT)
 ```
 
 ---
 
-## Week-by-week Plan (Short & Actionable)
+## Week-by-week Plan 
 
-> Each week: commit code, update issues, add a short demo GIF / screenshots to PR.
+### Week 1 — Project Initialization & Core Tech Stack
+* Initialize the repository and scaffold the base application using Vite and React.
+* Configure strict TypeScript rules and Tailwind CSS (v4) for styling.
+* Set up standard routing shells using React Router.
+**Deliverables:** Repo skeleton, `package.json`, Vite configuration.
 
-### Week 1 — Project Setup & Initial Infrastructure
+### Week 2 — Authentication System
+* Integrate Auth providers (Email/Password & Google OAuth).
+* Implement Firebase or Supabase auth wrappers and Context providers.
+* Secure routing using Protected Route components.
+**Deliverables:** Signup, Login flows; strictly Protected Dashboard routes.
 
-* Initialize `frontend/` (Next.js + Tailwind) and `backend/` (FastAPI) repos.
-* Configure linting / formatters (ESLint, Prettier, Black, isort).
-* Create Supabase project and get DB credentials.
+### Week 3 — UI/UX Refinement & Dashboard Enhancement
+* Build the primary responsive layout (Navbar, collapsable Sidebar).
+* Implement generic UI components (Buttons, Modals, Cards).
+* Add Framer Motion for snappy animations and Recharts for progress visualization.
+**Deliverables:** A fully aesthetic, interactive frontend shell.
 
-**Deliverables:** Repo skeleton, README, `.gitignore`, local dev instructions.
+### Week 4 — MyNotes & Rich Text Editor
+* Evaluate and integrate TipTap headless editor.
+* Add support for rich features (Tables, image parsing, bold/italic markup).
+* Develop HTML-to-PDF export capabilities using `html2pdf.js`.
+**Deliverables:** Robust word processing interface.
 
----
+### Week 5 — Community & Real-time Messaging
+* Design Supabase PostgreSQL schema for Groups and Messages.
+* Hook into WebSockets via Supabase Realtime subscriptions.
+* Build the direct messaging interface and auto-scroll/optimistic UI updates.
+**Deliverables:** Live updating chat system without page refreshes.
 
-### Week 2 — Authentication (Firebase Auth)
+### Week 6 — Assessment System Foundation
+* Build the database relational mappings for Tests, Questions, and Options.
+* Develop the Teacher UI for test authoring (Multiple Choice, True/False).
+* Implement `useReducer` to manage the massive nested state of a test.
+**Deliverables:** Teacher test-builder portal.
 
-* Integrate Firebase Auth in frontend (email / Google sign-in).
-* Protect routes and create auth context/provider.
-* Create simple dashboard layout.
+### Week 7 — Secure Online Testing Environment
+* Create the student test-taking portal.
+* Implement a server-synced UTC countdown timer.
+* Harness standard browser APIs (`visibilitychange`, `fullscreen`) to build anti-cheat tab-switching guards.
+**Deliverables:** Highly secure online examination system.
 
-**Deliverables:** Login, signup pages; protected route demo.
+### Week 8 — Member Management & Global Search
+* Develop global platform search modals for inviting users.
+* Implement deep debouncing logic to prevent API throttling on keystrokes.
+* Add Postgres search functions to rapidly query usernames.
+**Deliverables:** Group administration panel and platform search.
 
----
+### Week 9 — Notifications & MyNotes Upgrades
+* Implement a global WebSocket-powered notification Bell on the Navbar.
+* Build draggable, resizable application panels.
+* Rewrite Notes to support deeply nested folder arrays and drag-and-drop operations.
+**Deliverables:** Quality of life structural upgrades.
 
-### Week 3 — User Profiles & Role Management
+### Week 10 — Gemini AI Integration
+* Inject `@google/genai` logic into the frontend.
+* Create a floating StudyBot chat widget.
+* Provide context-aware payload construction (e.g. AI knows what test the user is taking).
+**Deliverables:** Fully functioning LLM assistant with markdown streaming.
 
-* Add Firebase Admin check in backend to verify tokens.
-* Create `/users/me` endpoint and Postgres user entry.
-* Implement profile page with role selection (student / teacher).
+### Week 11 — Onboarding System & Polish
+* Develop a gamified step-by-step Onboarding phase that highlights specific screen areas using Z-index overlays.
+* Perform sweeping `<a target="_blank" rel="noopener noreferrer">` safety rewrites across the codebase.
+**Deliverables:** User-friendly first-time login experience.
 
-**Deliverables:** Profile page, backend sync working.
+### Week 12 — Finalization, Seed Data & Testing
+* Write massive raw SQL generation scripts to seed the database with mock test data.
+* Squish any lingering TypeScript Warnings and run Vite bundle optimizations.
+**Deliverables:** Stable, polished local application.
 
----
+### Week 13 — Analytics & Teacher Reports (Planned)
+* Build aggregate view dashboards for instructors to track overall student success across exams.
+* Render success percentage distributions via Recharts.
+**Deliverables:** Educator Insights.
 
-### Week 4 — DB Models & Core APIs
+### Week 14 — Gamification (Planned)
+* Implement automated Streaks, daily study goals, and Badges to incentivize consistent platform usage.
+**Deliverables:** Gamified student progression mechanics.
 
-* Design and run initial Alembic migrations: Users, Notes, Groups, GroupMembers, Posts, ChatMessages, Tests, Questions, Results.
-* Add base CRUD APIs for Notes and Groups.
-
-**Deliverables:** Database schema, working CRUD endpoints.
-
----
-
-### Week 5 — Notes Editor & File Uploads
-
-* Integrate rich text editor (Tiptap/Quill) on the frontend.
-* Upload files to Firebase Storage and save URLs in the DB.
-
-**Deliverables:** Create/Edit notes UI; attachment uploads working.
-
----
-
-### Week 6 — Groups: Create & Join
-
-* Implement group creation flow and membership model.
-* Add pages to list groups a user belongs to and group details.
-
-**Deliverables:** Group creation UI and join flows.
-
----
-
-### Week 7 — Group Posts & Resource Sharing
-
-* Build group feed to post updates and attach notes/files.
-* Implement backend posts CRUD and resource library per group.
-
-**Deliverables:** Group feed, resource library with attachments.
-
----
-
-### Week 8 — Real-Time Chat (Mandatory)
-
-* Choose Pusher (fast) or Socket.IO + FastAPI WebSockets (custom).
-* Implement chat room per group, message broadcasting, and persistence to DB.
-* Add basic online user indicator.
-
-**Deliverables:** Real-time group chat; stored message history.
-
----
-
-### Week 9 — AI: Note Summaries & Flashcards
-
-* Create `POST /ai/summarize` and `POST /ai/flashcards` endpoints.
-* Integrate Gemini API calls with safe prompt templates and caching.
-
-**Deliverables:** Summarize note and generate flashcards UI.
-
----
-
-### Week 10 — Test Builder (Teacher) UI
-
-* Implement test creation UI: title, instructions, duration, question types.
-* Backend endpoints to store tests and questions and link to groups.
-
-**Deliverables:** Test builder and storage.
+### Week 15 — Final Deployment (Planned)
+* Final edge caching strategies.
+* Deploy frontend to Vercel production edge network.
+* Ensure domain masking and CDN delivery logic is active.
+**Deliverables:** Live, publicly accessible URL.
 
 ---
 
-### Week 11 — Test Runner & Auto-Grading
-
-* Create test-taking interface with timer and submit flow.
-* Auto-grade objective questions and store results.
-
-**Deliverables:** Test runner + report page with scores.
-
----
-
-### Week 12 — AI Test Generation & Study Plans
-
-* Build `POST /ai/generate-test` and `POST /ai/studyplan` endpoints.
-* Allow teacher review of AI-generated tests before publishing.
-
-**Deliverables:** AI test drafts and personalized study plans.
-
----
-
-### Week 13 — Redis Caching & Notifications
-
-* Add Redis caching for AI responses and implement TTL (expire cache keys).
-* Implement basic push notifications using Firebase Cloud Messaging.
-
-**Deliverables:** Cached AI results; in-app or push notifications.
-
----
-
-### Week 14 — Chat Improvements; Optional Gamification
-
-* Add typing indicators, read receipts, and message reactions to chat.
-* Optional: implement coins, badges, and streaks if time permits.
-
-**Deliverables:** Polished chat UX; gamification (optional).
-
----
-
-### Week 15 — Final Testing, Deployment & Documentation
-
-* Perform end-to-end testing, fix bugs, and harden security checks.
-* Deploy frontend to Vercel and backend to Render. Connect domain.
-* Export final documentation, API notes, and demo link.
-
-**Deliverables:** Live site links, deployment logs, final report PDF.
-
----
-
-## Development & Submission Guidelines
-
-* Create a PR at the end of each week with: summary, screenshots, and status.
-* Keep secrets (API keys) in environment variables only.
-* Use issue tracker for bugs and tasks, close issues when completed.
-* Prepare a 5–7 minute demo video at Week 15 showing core flows.
-
----
-
-## Useful Commands (Quick Start)
-
-**Frontend**
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-**Backend**
-
-```bash
-cd backend
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
-
-**Database migrations**
-
-```bash
-alembic upgrade head
-```
-
----
-
-## Notes & Tips
-
-* Keep AI calls minimal during development to save quota; use cached mock responses where possible.
-* For chat prototyping, Pusher speeds up development but switching to Socket.IO is easy once you need full control.
-* Maintain separate `.env` files for local and production. Never commit secrets.
-
----
-
-If you want this saved as `README.md` in your repo, I can create the file content for you or generate the file directly. Good luck — and feel free to ask for the PDF or a Gantt chart export.
+## Development Guidelines
+* Keep secrets in `.env` only (never commit this).
+* Maintain strict TypeScript adherence to prevent breaking runtime behavior.
+* Make use of UI abstractions over raw utility repeating.
