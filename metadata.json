@@ -1,0 +1,8 @@
+{
+  "name": "StudyBuddy AI",
+  "description": "An AI-Driven Study & Community Collaboration Platform featuring note creation, real-time chat, test generation, and personalized study plans.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
