@@ -516,6 +516,7 @@ export const communitiesService = {
         .from('profiles')
         .select('firebase_uid, full_name, email, username, avatar_url')
         .or(`email.ilike.%${query}%,username.ilike.%${query}%,full_name.ilike.%${query}%`)
+        .neq('firebase_uid', currentUserId || '')
         .limit(10);
       if (error) throw error;
       return data || [];

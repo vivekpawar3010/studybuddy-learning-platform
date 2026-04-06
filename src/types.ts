@@ -74,7 +74,7 @@ export interface ChatMessage {
 export interface ChatConversation {
   id: string;
   name: string;
-  avatar: string;
+  avatar: string | null;
   type: 'direct' | 'group' | 'broadcast';
   /** Original DB privacy type for communities: 'public' | 'private' | 'broadcast' */
   communityType?: 'public' | 'private' | 'broadcast';

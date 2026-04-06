@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signIn, signUp, signInWithGoogle } from '../services/firebase';
-import { GraduationCap, Mail, Lock, User, Sparkles, Chrome } from 'lucide-react';
+import { GraduationCap, Mail, Lock, User, Sparkles, Chrome, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 interface AuthProps {
   onAuthSuccess: () => void;
@@ -12,6 +12,7 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +27,16 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
       }
       onAuthSuccess();
     } catch (err: any) {
-      setError(err.message || 'An error occurred during authentication');
+      console.error(err);
+      if (err.code === 'auth/invalid-login-credentials' || err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        setError('Invalid email or password. Please try again or create an account.');
+      } else if (err.code === 'auth/email-already-in-use') {
+        setError('This email is already in use. Please sign in instead.');
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('Too many failed attempts. Please try again later.');
+      } else {
+        setError(err.message?.replace('Firebase: ', '') || 'An error occurred during authentication');
+      }
     } finally {
       setLoading(false);
     }
@@ -57,8 +67,9 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
         </p>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-100 text-red-600 text-xs rounded-lg">
-            {error}
+          <div className="mb-4 p-3 bg-red-50 border border-red-100 flex items-start gap-2 rounded-lg">
+            <AlertCircle size={16} className="text-red-500 shrink-0 mt-0.5" />
+            <span className="text-red-600 text-xs font-medium">{error}</span>
           </div>
         )}
 
@@ -83,13 +94,21 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
             <div className="relative">
               <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+                className="w-full pl-10 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
               />
+              <button 
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none p-1"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+              </button>
             </div>
           </div>
 

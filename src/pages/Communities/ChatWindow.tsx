@@ -170,12 +170,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chat, onBack, onToggleInfo, isM
               <span className="material-icons opacity-70">arrow_back</span>
             </button>
           )}
-          <img
-            src={chat.avatar}
-            alt={chat.name}
-            className="w-10 h-10 rounded-full object-cover shrink-0"
-            referrerPolicy="no-referrer"
-          />
+          {chat.avatar ? (
+            <img
+              src={chat.avatar}
+              alt={chat.name}
+              className="w-10 h-10 rounded-full object-cover shrink-0"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm uppercase shrink-0">
+              {chat.name.slice(0, 2)}
+            </div>
+          )}
           <div className="flex flex-col justify-center min-w-0">
             <h3 className="text-[16px] text-[#111b21] truncate leading-5 font-medium">{chat.name}</h3>
             <p className="text-[13px] text-[#667781] truncate leading-4">
@@ -306,11 +312,17 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chat, onBack, onToggleInfo, isM
             {/* Accept/Block banner */}
             <div className="bg-amber-50 border-t border-amber-200 px-4 py-3 flex items-center justify-between gap-4">
               <div className="flex items-center gap-2 min-w-0">
-                <img
-                  src={chat.avatar}
-                  alt={chat.name}
-                  className="w-7 h-7 rounded-full object-cover shrink-0"
-                />
+                {chat.avatar ? (
+                  <img
+                    src={chat.avatar}
+                    alt={chat.name}
+                    className="w-7 h-7 rounded-full object-cover shrink-0"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xs uppercase shrink-0">
+                    {chat.name.slice(0, 2)}
+                  </div>
+                )}
                 <p className="text-[13px] text-amber-800 font-medium truncate">
                   <strong>{chat.name}</strong> sent you a message request
                 </p>

@@ -33,6 +33,7 @@ const AppContent: React.FC = () => {
   const [userRole, setUserRole] = useState<'student' | 'teacher' | null>(() => {
     return localStorage.getItem('studyBuddyRole') as 'student' | 'teacher' | null;
   });
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     setMounted(true);
@@ -41,8 +42,8 @@ const AppContent: React.FC = () => {
       setUser(firebaseUser);
       if (firebaseUser) {
         const profile = await syncUserToSupabase(firebaseUser);
-        // Force new or incomplete profiles to complete setup
-        if (profile?.isNewUser || !profile?.username || profile?.username === '') {
+        // Only redirect new users who haven't set up their profile yet
+        if (profile?.isNewUser && (!profile?.username || profile?.username === '')) {
           navigate('/profile');
         }
         // Check onboarding status
@@ -178,8 +179,6 @@ const AppContent: React.FC = () => {
   }
 
   const isFullWidthPage = location.pathname === '/notes' || location.pathname === '/communities';
-
-  const { unreadCount } = useNotifications();
 
   return (
     <div className={`h-screen w-screen overflow-hidden bg-gray-50 flex flex-col transition-opacity duration-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
