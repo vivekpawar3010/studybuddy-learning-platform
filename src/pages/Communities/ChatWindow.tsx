@@ -150,12 +150,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ chat, onBack, onToggleInfo, isM
 
   return (
     <div className="flex flex-col h-full w-full bg-[#efeae2] relative overflow-hidden min-h-0">
-      {/* Background pattern */}
+      {/* Background pattern - subtle CSS dot pattern, no external dependency */}
       <div
-        className="absolute inset-0 opacity-[0.06] pointer-events-none"
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
         style={{
-          backgroundImage: 'url("https://w0.peakpx.com/wallpaper/508/873/HD-wallpaper-whatsapp-background-doodles-pattern-drawings.jpg")',
-          backgroundSize: '400px'
+          backgroundImage: 'radial-gradient(circle, #a0a0a0 1px, transparent 1px)',
+          backgroundSize: '20px 20px'
         }}
       />
 

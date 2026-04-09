@@ -67,7 +67,8 @@ const AppContent: React.FC = () => {
       unsubscribe();
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
 
   const selectRole = (role: 'student' | 'teacher') => {
     setUserRole(role);
@@ -234,6 +235,7 @@ const AppContent: React.FC = () => {
         <OnboardingWizard
           onComplete={async () => {
             setShowOnboarding(false);
+            setShowHints(false);
             await markOnboardingComplete(user.uid);
           }}
         />

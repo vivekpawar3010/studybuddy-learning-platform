@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { supabase } from '../services/supabase';
 import { auth } from '../services/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export interface AppNotification {
   id: string;
@@ -63,115 +64,129 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, []);
 
   useEffect(() => {
-    const userId = auth.currentUser?.uid;
-    if (!userId) return;
+    let cleanup: (() => void)[] = [];
 
-    // --- Listen for incoming Direct Messages ---
-    const dmChannel = supabase
-      .channel(`notifications:dm:${userId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'direct_messages' },
-        async (payload) => {
-          const msg = payload.new as any;
-          // Skip own messages
-          if (msg.sender_id === userId) return;
+    const attachChannels = (userId: string) => {
+      // Tear down any existing channels before setting up new ones
+      cleanup.forEach(fn => fn());
+      cleanup = [];
 
-          // Verify this DM is in a conversation the current user is part of
-          const { data: conv } = await supabase
-            .from('conversations')
-            .select('id, user1_id, user2_id')
-            .eq('id', msg.conversation_id)
-            .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
-            .maybeSingle();
+      // --- Listen for incoming Direct Messages ---
+      const dmChannel = supabase
+        .channel(`notifications:dm:${userId}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'direct_messages' },
+          async (payload) => {
+            const msg = payload.new as any;
+            if (msg.sender_id === userId) return;
 
-          if (!conv) return;
+            const { data: conv } = await supabase
+              .from('conversations')
+              .select('id, user1_id, user2_id')
+              .eq('id', msg.conversation_id)
+              .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+              .maybeSingle();
 
-          // Fetch sender profile
-          const { data: sender } = await supabase
-            .from('profiles')
-            .select('full_name, avatar_url')
-            .eq('firebase_uid', msg.sender_id)
-            .maybeSingle();
+            if (!conv) return;
 
-          const senderName = sender?.full_name || 'Someone';
-          addNotification({
-            id: msg.id,
-            title: `New message from ${senderName}`,
-            message: msg.message_text?.length > 80
-              ? msg.message_text.slice(0, 80) + '…'
-              : msg.message_text || '📎 Attachment',
-            time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            type: 'dm',
-            read: false,
-            chatId: conv.id,
-            senderId: msg.sender_id,
-            senderName,
-            senderAvatar: sender?.avatar_url,
-            createdAt: new Date(msg.created_at),
-          });
-        }
-      )
-      .subscribe();
+            const { data: sender } = await supabase
+              .from('profiles')
+              .select('full_name, avatar_url')
+              .eq('firebase_uid', msg.sender_id)
+              .maybeSingle();
 
-    // --- Listen for incoming Group Messages ---
-    const groupChannel = supabase
-      .channel(`notifications:group:${userId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'messages' },
-        async (payload) => {
-          const msg = payload.new as any;
-          if (msg.sender_id === userId) return;
+            const senderName = sender?.full_name || 'Someone';
+            addNotification({
+              id: msg.id,
+              title: `New message from ${senderName}`,
+              message: msg.message_text?.length > 80
+                ? msg.message_text.slice(0, 80) + '…'
+                : msg.message_text || '📎 Attachment',
+              time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              type: 'dm',
+              read: false,
+              chatId: conv.id,
+              senderId: msg.sender_id,
+              senderName,
+              senderAvatar: sender?.avatar_url,
+              createdAt: new Date(msg.created_at),
+            });
+          }
+        )
+        .subscribe();
 
-          // Check if user is member of this community
-          const { data: membership } = await supabase
-            .from('community_members')
-            .select('community_id')
-            .eq('community_id', msg.community_id)
-            .eq('user_id', userId)
-            .maybeSingle();
+      // --- Listen for incoming Group Messages ---
+      const groupChannel = supabase
+        .channel(`notifications:group:${userId}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'messages' },
+          async (payload) => {
+            const msg = payload.new as any;
+            if (msg.sender_id === userId) return;
 
-          if (!membership) return;
+            const { data: membership } = await supabase
+              .from('community_members')
+              .select('community_id')
+              .eq('community_id', msg.community_id)
+              .eq('user_id', userId)
+              .maybeSingle();
 
-          const { data: sender } = await supabase
-            .from('profiles')
-            .select('full_name, avatar_url')
-            .eq('firebase_uid', msg.sender_id)
-            .maybeSingle();
+            if (!membership) return;
 
-          const { data: community } = await supabase
-            .from('communities')
-            .select('name')
-            .eq('id', msg.community_id)
-            .maybeSingle();
+            const { data: sender } = await supabase
+              .from('profiles')
+              .select('full_name, avatar_url')
+              .eq('firebase_uid', msg.sender_id)
+              .maybeSingle();
 
-          const senderName = sender?.full_name || 'Someone';
-          const communityName = community?.name || 'a group';
+            const { data: community } = await supabase
+              .from('communities')
+              .select('name')
+              .eq('id', msg.community_id)
+              .maybeSingle();
 
-          addNotification({
-            id: msg.id,
-            title: `${senderName} in ${communityName}`,
-            message: msg.message_text?.length > 80
-              ? msg.message_text.slice(0, 80) + '…'
-              : msg.message_text || '📎 Attachment',
-            time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            type: 'group',
-            read: false,
-            chatId: msg.community_id,
-            senderId: msg.sender_id,
-            senderName,
-            senderAvatar: sender?.avatar_url,
-            createdAt: new Date(msg.created_at),
-          });
-        }
-      )
-      .subscribe();
+            const senderName = sender?.full_name || 'Someone';
+            const communityName = community?.name || 'a group';
 
-    channelsRef.current = [
-      () => supabase.removeChannel(dmChannel),
-      () => supabase.removeChannel(groupChannel),
-    ];
+            addNotification({
+              id: msg.id,
+              title: `${senderName} in ${communityName}`,
+              message: msg.message_text?.length > 80
+                ? msg.message_text.slice(0, 80) + '…'
+                : msg.message_text || '📎 Attachment',
+              time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              type: 'group',
+              read: false,
+              chatId: msg.community_id,
+              senderId: msg.sender_id,
+              senderName,
+              senderAvatar: sender?.avatar_url,
+              createdAt: new Date(msg.created_at),
+            });
+          }
+        )
+        .subscribe();
+
+      cleanup = [
+        () => supabase.removeChannel(dmChannel),
+        () => supabase.removeChannel(groupChannel),
+      ];
+    };
+
+    // Subscribe to Firebase auth state — channels attach only AFTER login is confirmed
+    const unsubAuth = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser?.uid) {
+        attachChannels(firebaseUser.uid);
+      } else {
+        // User logged out — tear down channels
+        cleanup.forEach(fn => fn());
+        cleanup = [];
+      }
+    });
+
+    channelsRef.current = [() => { unsubAuth(); cleanup.forEach(fn => fn()); }];
 
     return () => {
       channelsRef.current.forEach(unsub => unsub());
