@@ -378,7 +378,7 @@ const TestsQuizzes: React.FC<TestsQuizzesProps> = ({ role }) => {
                           }`}>
                             {test.visibility === 'private' ? '🔒 Private' : '🌐 Global'}
                           </span>
-                          {test.test_distributions?.length > 0 && (
+                          {(test.test_distributions?.length ?? 0) > 0 && (
                             <span className="px-2 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-bold uppercase tracking-wider">
                               👥 Community
                             </span>
@@ -744,8 +744,8 @@ const TestBuilder: React.FC<{ test: any; onBack: () => void; onPublish?: () => v
         visibility: formData.visibility || 'public',
         status: status,
         teacher_id: userId,
-        start_time: formData.start_time ? new Date(formData.start_time).toISOString() : null,
-        end_time: formData.end_time ? new Date(formData.end_time).toISOString() : null
+        start_time: formData.start_time ? new Date(formData.start_time).toISOString() : undefined,
+        end_time: formData.end_time ? new Date(formData.end_time).toISOString() : undefined
       };
 
       let savedTest;
@@ -1493,7 +1493,7 @@ const SecureTestAttemptView: React.FC<{ test: any; attempt: any; onFinish: (id: 
 
             <div className="space-y-8">
               <h2 className="text-2xl font-bold text-gray-900 leading-tight tracking-tight markdown-content">
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock }}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock as any }}>
                   {currentQuestion?.question_text}
                 </ReactMarkdown>
               </h2>
@@ -1515,7 +1515,7 @@ const SecureTestAttemptView: React.FC<{ test: any; attempt: any; onFinish: (id: 
                       {answers[currentQuestion.id] === opt.id && <div className="size-2 bg-white rounded-full" />}
                     </div>
                     <span className="text-base font-bold markdown-content">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock }}>{opt.text}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock as any }}>{opt.text}</ReactMarkdown>
                     </span>
                   </button>
                 ))}
@@ -1540,7 +1540,7 @@ const SecureTestAttemptView: React.FC<{ test: any; attempt: any; onFinish: (id: 
                         {isSelected && <CheckCircle2 size={14} className="text-white" />}
                       </div>
                       <span className="text-base font-bold markdown-content">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock }}>{opt.text}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock as any }}>{opt.text}</ReactMarkdown>
                       </span>
                     </button>
                   );
@@ -1777,7 +1777,7 @@ const TestResultsView: React.FC<{ attempt: any, onBack: () => void }> = ({ attem
                     <div className="flex gap-3">
                       <Info size={18} className="shrink-0 text-indigo-500" />
                       <div className="markdown-content">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock }}>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock as any }}>
                           {q.explanation}
                         </ReactMarkdown>
                       </div>
@@ -1966,7 +1966,7 @@ const TestAnalyticsView: React.FC<{ test: any, onBack: () => void, onGrade: (id:
                     <div className="flex items-center gap-3 min-w-0">
                       <span className="size-6 bg-gray-100 text-gray-500 rounded-lg flex items-center justify-center text-[10px] font-black shrink-0">Q{idx + 1}</span>
                       <span className="text-xs font-bold text-gray-900 truncate markdown-content">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock }}>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock as any }}>
                           {q.question_text}
                         </ReactMarkdown>
                       </span>
@@ -2073,7 +2073,7 @@ const TestGradingView: React.FC<{ attempt: any, onBack: () => void, onFinish: ()
                   </span>
                   <div>
                     <h4 className="text-lg font-bold text-gray-900 leading-tight markdown-content">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock }}>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock as any }}>
                         {q.question_text}
                       </ReactMarkdown>
                     </h4>

@@ -55,11 +55,130 @@
   --color-red-950: #450a0a;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   REFINED THEME PALETTE — v2
+   Each theme is carefully color-engineered for contrast,
+   readability, and visual character.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────
+   BASIC — Neutral white; clean, borderless, minimal glass.
+   Background: drifting grey particles.
+───────────────────────────────────────────────────────────── */
+:root,
+[data-theme="basic"] {
+  --sb-bg:           transparent;
+  --sb-surface:      #ffffff;            /* solid white — readability first */
+  --sb-surface-alt:  #f9fafb;            /* gray-50 */
+  --sb-border:       #e5e7eb;            /* gray-200 */
+  --sb-text:         #111827;            /* gray-900 */
+  --sb-text-muted:   #6b7280;            /* gray-500 */
+  --sb-accent:       #4f46e5;            /* indigo-600 */
+  --sb-accent-light: #eef2ff;            /* indigo-50 */
+  --sb-header-bg:    rgba(255,255,255,0.96);
+  --sb-sidebar-bg:   #f9fafb;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LIGHT — Warm blue-indigo palette; frosted glass surfaces.
+   Background: soft floating colour orbs.
+───────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --sb-bg:           transparent;
+  --sb-surface:      rgba(255,255,255,0.90);    /* white glass */
+  --sb-surface-alt:  rgba(240,245,255,0.88);    /* blue-tinted glass */
+  --sb-border:       rgba(165,180,252,0.50);    /* indigo-300 semi */
+  --sb-text:         #1e1b4b;                   /* indigo-950 */
+  --sb-text-muted:   #4338ca;                   /* indigo-700 */
+  --sb-accent:       #4f46e5;                   /* indigo-600 */
+  --sb-accent-light: rgba(238,242,255,0.92);    /* indigo-50 glass */
+  --sb-header-bg:    rgba(255,255,255,0.88);
+  --sb-sidebar-bg:   rgba(238,242,255,0.82);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DARK — Deep navy-slate; high contrast text; frosted panels.
+   Background: animated dot-grid with pulsing glows.
+───────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --sb-bg:           transparent;
+  --sb-surface:      rgba(17,24,39,0.94);       /* gray-900 frosted */
+  --sb-surface-alt:  rgba(31,41,55,0.90);       /* gray-800 frosted */
+  --sb-border:       rgba(55,65,81,0.85);       /* gray-700 semi */
+  --sb-text:         #f9fafb;                   /* gray-50 — max contrast */
+  --sb-text-muted:   #9ca3af;                   /* gray-400 */
+  --sb-accent:       #818cf8;                   /* indigo-400 — softer on dark */
+  --sb-accent-light: rgba(55,48,163,0.25);      /* indigo-800 glass */
+  --sb-header-bg:    rgba(10,17,30,0.96);
+  --sb-sidebar-bg:   rgba(13,20,35,0.94);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   AURORA — Northern lights; emerald + violet; glow panels.
+   Background: flowing green/purple neon blobs.
+───────────────────────────────────────────────────────────── */
+[data-theme="aurora"] {
+  --sb-bg:           transparent;
+  --sb-surface:      rgba(8,6,28,0.84);         /* deep violet-black glass */
+  --sb-surface-alt:  rgba(16,11,48,0.80);
+  --sb-border:       rgba(52,211,153,0.22);     /* emerald glow border */
+  --sb-text:         #ecfdf5;                   /* emerald-50 — warm white */
+  --sb-text-muted:   #6ee7b7;                   /* emerald-300 */
+  --sb-accent:       #34d399;                   /* emerald-400 */
+  --sb-accent-light: rgba(16,185,129,0.14);     /* emerald glass */
+  --sb-header-bg:    rgba(4,3,14,0.90);
+  --sb-sidebar-bg:   rgba(6,4,20,0.88);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   NEBULA — Deep space; indigo+violet; twinkling stars.
+   Background: 120 twinkling star SVG + nebula clouds.
+───────────────────────────────────────────────────────────── */
+[data-theme="nebula"] {
+  --sb-bg:           transparent;
+  --sb-surface:      rgba(2,4,20,0.86);         /* near-black space glass */
+  --sb-surface-alt:  rgba(7,5,30,0.82);
+  --sb-border:       rgba(129,140,248,0.22);    /* indigo-400 glow border */
+  --sb-text:         #e0e7ff;                   /* indigo-100 — space white */
+  --sb-text-muted:   #818cf8;                   /* indigo-400 */
+  --sb-accent:       #a5b4fc;                   /* indigo-300 */
+  --sb-accent-light: rgba(99,102,241,0.15);     /* indigo glass */
+  --sb-header-bg:    rgba(1,2,12,0.94);
+  --sb-sidebar-bg:   rgba(2,3,14,0.90);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GEOMETRIC — Crisp wireframe; indigo grid; light glass.
+   Background: floating 3D perspective wireframe shapes.
+───────────────────────────────────────────────────────────── */
+[data-theme="geometric"] {
+  --sb-bg:           transparent;
+  --sb-surface:      rgba(255,255,255,0.86);    /* frosted white */
+  --sb-surface-alt:  rgba(238,242,255,0.84);    /* indigo-50 glass */
+  --sb-border:       rgba(129,140,248,0.40);    /* indigo-400 crisp border */
+  --sb-text:         #1e1b4b;                   /* indigo-950 */
+  --sb-text-muted:   #6366f1;                   /* indigo-500 */
+  --sb-accent:       #6366f1;                   /* indigo-500 */
+  --sb-accent-light: rgba(238,242,255,0.94);
+  --sb-header-bg:    rgba(248,250,255,0.92);
+  --sb-sidebar-bg:   rgba(238,242,255,0.88);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Global body + html setup
+───────────────────────────────────────────────────────────── */
+html { background: var(--sb-bg, #f9fafb); }
+body {
+  color: var(--sb-text, #111827);
+  transition: background-color 0.35s ease, color 0.25s ease;
+}
+
 @layer base {
   body {
-    @apply text-sm text-gray-900 bg-gray-50 antialiased dark:text-gray-100 dark:bg-gray-950;
+    @apply text-sm antialiased;
     font-feature-settings: "cv02", "cv05", "cv08", "cv09", "cv11";
   }
+
 
   h1 { @apply text-xl font-semibold tracking-tight; }
   h2 { @apply text-lg font-medium tracking-tight; }
@@ -150,16 +269,252 @@
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-gray-400; }
+
+/* ── Smooth theme transitions ─────────────────────────────────── */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+/* But NOT transforms, opacity, width/height (hurts animations) */
+button, a, input, textarea, select, [class*="animate"] {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.25s;
 }
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-full;
+
+/* ── Reusable CSS-var based utilities ─────────────────────────── */
+.sb-bg     { background-color: var(--sb-bg); }
+.sb-surface { background-color: var(--sb-surface); }
+.sb-surface-alt { background-color: var(--sb-surface-alt); }
+.sb-border { border-color: var(--sb-border); }
+.sb-text   { color: var(--sb-text); }
+.sb-muted  { color: var(--sb-text-muted); }
+.sb-accent { color: var(--sb-accent); }
+
+.sb-card {
+  background-color: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  border-radius: 0.75rem;
 }
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400;
+
+.sb-panel {
+  background-color: var(--sb-sidebar-bg);
+  border-right: 1px solid var(--sb-border);
+}
+
+.sb-header {
+  background-color: var(--sb-header-bg);
+  border-bottom: 1px solid var(--sb-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ── Mobile safe area ─────────────────────────────────────────── */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0); }
+.pt-safe { padding-top: env(safe-area-inset-top, 0); }
+
+
+/* ══════════════════════════════════════════════════════════════════
+   SMART TAILWIND → CSS VARIABLE NORMALIZATION  v2
+   ─────────────────────────────────────────────────────────────────
+   STRATEGY:
+   • For ALL themes:   remap bg-white → var(--sb-surface)  ← most impactful
+   • For DARK themes:  full neutral gray override (dark/aurora/nebula)
+   • For LIGHT themes: Tailwind defaults work fine — no override needed
+   • Specificity: [data-theme="x"] .class = 0-1-1 > Tailwind 0-1-0 ✅
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── ALL themes: most impactful single override ──────────────── */
+[data-theme] .bg-white { background-color: var(--sb-surface); }
+[data-theme] .hover\:bg-white:hover { background-color: var(--sb-surface); }
+
+/* ── DARK THEMES ONLY (dark / aurora / nebula) ───────────────── */
+
+/* Backgrounds */
+[data-theme="dark"] .bg-gray-50,
+[data-theme="aurora"] .bg-gray-50,
+[data-theme="nebula"] .bg-gray-50  { background-color: var(--sb-surface-alt); }
+
+[data-theme="dark"] .bg-gray-100,
+[data-theme="aurora"] .bg-gray-100,
+[data-theme="nebula"] .bg-gray-100 { background-color: rgba(255,255,255,0.05); }
+
+[data-theme="dark"] .bg-gray-200,
+[data-theme="aurora"] .bg-gray-200,
+[data-theme="nebula"] .bg-gray-200 { background-color: rgba(255,255,255,0.08); }
+
+/* dark: prefixed backgrounds */
+[data-theme="dark"] .dark\:bg-gray-950,
+[data-theme="aurora"] .dark\:bg-gray-950,
+[data-theme="nebula"] .dark\:bg-gray-950 { background-color: var(--sb-sidebar-bg); }
+
+[data-theme="dark"] .dark\:bg-gray-900,
+[data-theme="aurora"] .dark\:bg-gray-900,
+[data-theme="nebula"] .dark\:bg-gray-900 { background-color: var(--sb-sidebar-bg); }
+
+[data-theme="dark"] .dark\:bg-gray-800,
+[data-theme="aurora"] .dark\:bg-gray-800,
+[data-theme="nebula"] .dark\:bg-gray-800 { background-color: var(--sb-surface); }
+
+[data-theme="dark"] .dark\:bg-gray-700,
+[data-theme="aurora"] .dark\:bg-gray-700,
+[data-theme="nebula"] .dark\:bg-gray-700 { background-color: var(--sb-surface-alt); }
+
+/* Text */
+[data-theme="dark"] .text-gray-900,
+[data-theme="aurora"] .text-gray-900,
+[data-theme="nebula"] .text-gray-900 { color: var(--sb-text); }
+
+[data-theme="dark"] .text-gray-800,
+[data-theme="aurora"] .text-gray-800,
+[data-theme="nebula"] .text-gray-800 { color: var(--sb-text); }
+
+[data-theme="dark"] .text-gray-700,
+[data-theme="aurora"] .text-gray-700,
+[data-theme="nebula"] .text-gray-700 { color: var(--sb-text); }
+
+[data-theme="dark"] .text-gray-600,
+[data-theme="aurora"] .text-gray-600,
+[data-theme="nebula"] .text-gray-600 { color: var(--sb-text-muted); }
+
+[data-theme="dark"] .text-gray-500,
+[data-theme="aurora"] .text-gray-500,
+[data-theme="nebula"] .text-gray-500 { color: var(--sb-text-muted); }
+
+[data-theme="dark"] .text-gray-400,
+[data-theme="aurora"] .text-gray-400,
+[data-theme="nebula"] .text-gray-400 { color: var(--sb-text-muted); }
+
+/* dark: prefix text */
+[data-theme="dark"] .dark\:text-white,
+[data-theme="aurora"] .dark\:text-white,
+[data-theme="nebula"] .dark\:text-white { color: var(--sb-text); }
+
+[data-theme="dark"] .dark\:text-gray-100,
+[data-theme="aurora"] .dark\:text-gray-100,
+[data-theme="nebula"] .dark\:text-gray-100 { color: var(--sb-text); }
+
+[data-theme="dark"] .dark\:text-gray-200,
+[data-theme="aurora"] .dark\:text-gray-200,
+[data-theme="nebula"] .dark\:text-gray-200 { color: var(--sb-text); }
+
+[data-theme="dark"] .dark\:text-gray-300,
+[data-theme="aurora"] .dark\:text-gray-300,
+[data-theme="nebula"] .dark\:text-gray-300 { color: var(--sb-text-muted); }
+
+[data-theme="dark"] .dark\:text-gray-400,
+[data-theme="aurora"] .dark\:text-gray-400,
+[data-theme="nebula"] .dark\:text-gray-400 { color: var(--sb-text-muted); }
+
+/* Borders */
+[data-theme="dark"] .border-gray-100,
+[data-theme="aurora"] .border-gray-100,
+[data-theme="nebula"] .border-gray-100 { border-color: var(--sb-border); }
+
+[data-theme="dark"] .border-gray-200,
+[data-theme="aurora"] .border-gray-200,
+[data-theme="nebula"] .border-gray-200 { border-color: var(--sb-border); }
+
+[data-theme="dark"] .border-gray-300,
+[data-theme="aurora"] .border-gray-300,
+[data-theme="nebula"] .border-gray-300 { border-color: var(--sb-border); }
+
+[data-theme="dark"] .dark\:border-gray-700,
+[data-theme="aurora"] .dark\:border-gray-700,
+[data-theme="nebula"] .dark\:border-gray-700 { border-color: var(--sb-border); }
+
+[data-theme="dark"] .dark\:border-gray-600,
+[data-theme="aurora"] .dark\:border-gray-600,
+[data-theme="nebula"] .dark\:border-gray-600 { border-color: var(--sb-border); }
+
+/* Divide */
+[data-theme="dark"] .divide-gray-50 > * + *,
+[data-theme="aurora"] .divide-gray-50 > * + *,
+[data-theme="nebula"] .divide-gray-50 > * + * { border-color: var(--sb-border); }
+
+[data-theme="dark"] .divide-gray-100 > * + *,
+[data-theme="aurora"] .divide-gray-100 > * + *,
+[data-theme="nebula"] .divide-gray-100 > * + * { border-color: var(--sb-border); }
+
+[data-theme="dark"] .divide-gray-200 > * + *,
+[data-theme="aurora"] .divide-gray-200 > * + *,
+[data-theme="nebula"] .divide-gray-200 > * + * { border-color: var(--sb-border); }
+
+[data-theme="dark"] .dark\:divide-gray-700 > * + *,
+[data-theme="aurora"] .dark\:divide-gray-700 > * + *,
+[data-theme="nebula"] .dark\:divide-gray-700 > * + * { border-color: var(--sb-border); }
+
+/* Hover */
+[data-theme="dark"] .hover\:bg-gray-50:hover,
+[data-theme="aurora"] .hover\:bg-gray-50:hover,
+[data-theme="nebula"] .hover\:bg-gray-50:hover { background-color: var(--sb-surface-alt); }
+
+[data-theme="dark"] .hover\:bg-gray-100:hover,
+[data-theme="aurora"] .hover\:bg-gray-100:hover,
+[data-theme="nebula"] .hover\:bg-gray-100:hover { background-color: var(--sb-surface-alt); }
+
+[data-theme="dark"] .dark\:hover\:bg-gray-700:hover,
+[data-theme="aurora"] .dark\:hover\:bg-gray-700:hover,
+[data-theme="nebula"] .dark\:hover\:bg-gray-700:hover { background-color: var(--sb-surface-alt); }
+
+[data-theme="dark"] .dark\:hover\:bg-gray-800:hover,
+[data-theme="aurora"] .dark\:hover\:bg-gray-800:hover,
+[data-theme="nebula"] .dark\:hover\:bg-gray-800:hover { background-color: var(--sb-surface-alt); }
+
+/* ── ALL themes: form elements get themed ────────────────────── */
+[data-theme] input:not([type="radio"]):not([type="checkbox"]):not([type="range"]):not([type="submit"]):not([type="button"]),
+[data-theme] textarea,
+[data-theme] select {
+  background-color: var(--sb-surface-alt);
+  color: var(--sb-text);
+  border-color: var(--sb-border);
+}
+[data-theme] input::placeholder,
+[data-theme] textarea::placeholder { color: var(--sb-text-muted); opacity: 0.75; }
+[data-theme] input:focus,
+[data-theme] textarea:focus,
+[data-theme] select:focus { border-color: var(--sb-accent); }
+
+/* ── ALL themes: TipTap prose editor ────────────────────────── */
+[data-theme] .ProseMirror {
+  background-color: var(--sb-surface);
+  color: var(--sb-text);
+  min-height: inherit;
+}
+[data-theme] .ProseMirror p.is-editor-empty::before { color: var(--sb-text-muted); }
+
+/* ── DARK themes: shadow lift ────────────────────────────────── */
+[data-theme="dark"] .shadow-sm,
+[data-theme="aurora"] .shadow-sm,
+[data-theme="nebula"] .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+[data-theme="dark"] .shadow-lg,
+[data-theme="aurora"] .shadow-lg,
+[data-theme="nebula"] .shadow-lg { box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+
+/* ── ALL themes: table normalization ─────────────────────────── */
+[data-theme] table  { background-color: var(--sb-surface); color: var(--sb-text); }
+[data-theme] thead  { background-color: var(--sb-surface-alt); }
+[data-theme] th { color: var(--sb-text-muted); border-color: var(--sb-border); }
+[data-theme] td { color: var(--sb-text); border-color: var(--sb-border); }
+[data-theme] tr:hover { background-color: var(--sb-surface-alt); }
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+[data-theme] ::-webkit-scrollbar-thumb { background: var(--sb-border); border-radius: 9999px; }
+[data-theme] ::-webkit-scrollbar-thumb:hover { background: var(--sb-text-muted); }
+
+/* ── Ring offset ─────────────────────────────────────────────── */
+[data-theme] .ring-white { --tw-ring-color: var(--sb-surface); }
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  body, #root { overflow-x: hidden; max-width: 100vw; }
+  .sb-card    { padding: 0.75rem; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+}
+@media (min-width: 640px) and (max-width: 1024px) {
+  .max-w-7xl { max-width: 100%; }
 }

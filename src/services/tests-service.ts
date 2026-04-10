@@ -599,7 +599,7 @@ Ensure the distractors (incorrect options) are plausible and address common misc
     });
 
     try {
-      return JSON.parse(response.text);
+      return JSON.parse(response.text ?? '[]');
     } catch (e) {
       console.error('Failed to parse AI response', e);
       return [];

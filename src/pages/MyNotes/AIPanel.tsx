@@ -186,7 +186,7 @@ const AIPanel: React.FC<AIPanelProps> = ({ isOpen, onClose, noteContent }) => {
                       <ReactMarkdown 
                         remarkPlugins={[remarkGfm]}
                         components={{
-                          code: CodeBlock,
+                          code: CodeBlock as any,
                           a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline font-medium" />
                         }}
                       >

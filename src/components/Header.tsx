@@ -39,12 +39,12 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200 h-14 flex items-center justify-between px-4 gap-6 w-full">
+      <header className="sb-header sticky top-0 z-50 h-14 flex items-center justify-between px-4 gap-6 w-full">
         {/* Logo & Mobile Menu Toggle */}
         <div className="flex items-center gap-4">
           <button 
             onClick={() => setIsMobileMenuOpen(true)} 
-            className="lg:hidden p-1.5 hover:bg-gray-100 rounded-md transition-colors text-gray-500"
+            className="lg:hidden p-1.5 hover:bg-[var(--sb-surface-alt)] rounded-md transition-colors text-[var(--sb-text-muted)]"
           >
             <Menu size={20} />
           </button>
@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
             <div className="w-7 h-7 bg-indigo-600 rounded-md flex items-center justify-center text-white shadow-sm">
                <Sparkles size={16} />
             </div>
-            <span className="text-lg font-bold text-gray-900 tracking-tight hidden sm:block">StudyBuddy</span>
+            <span className="text-lg font-bold text-[var(--sb-text)] tracking-tight hidden sm:block">StudyBuddy</span>
           </div>
         </div>
 
@@ -68,8 +68,8 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
               onClick={() => onNavigate(item.name)}
               className={`h-full px-1 flex items-center text-sm font-medium transition-colors border-b-2 relative top-[1px] ${
                 activePage === item.name 
-                  ? 'text-blue-600 border-blue-600' 
-                  : 'text-gray-500 border-transparent hover:text-gray-900'
+                  ? 'text-[var(--sb-accent)] border-[var(--sb-accent)]'
+                  : 'text-[var(--sb-text-muted)] border-transparent hover:text-[var(--sb-text)]'
               }`}
             >
               {item.name}
@@ -96,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
           {/* Mobile Search Icon */}
           <button 
             onClick={() => setIsSearchOverlayOpen(true)}
-            className="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-md transition-colors"
+            className="md:hidden p-2 text-[var(--sb-text-muted)] hover:bg-[var(--sb-surface-alt)] rounded-md transition-colors"
           >
             <Search size={18} />
           </button>
@@ -105,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => { setShowNotifications(!showNotifications); if (!showNotifications) markAllRead(); }}
-              className={`p-2 rounded-md transition-colors relative ${showNotifications ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:bg-gray-100'}`}
+              className={`p-2 rounded-md transition-colors relative ${showNotifications ? 'bg-[var(--sb-surface-alt)] text-[var(--sb-text)]' : 'text-[var(--sb-text-muted)] hover:bg-[var(--sb-surface-alt)]'}`}
             >
               <Bell size={18} />
               {unreadCount > 0 && (
@@ -116,9 +116,9 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50">
-                <div className="px-4 py-2.5 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                  <h3 className="font-semibold text-gray-900 text-xs">Notifications</h3>
+              <div className="absolute right-0 mt-2 w-80 bg-[var(--sb-surface)] rounded-lg shadow-xl border border-[var(--sb-border)] overflow-hidden z-50">
+                <div className="px-4 py-2.5 border-b border-[var(--sb-border)] flex justify-between items-center bg-[var(--sb-surface-alt)]">
+                  <h3 className="font-semibold text-[var(--sb-text)] text-xs">Notifications</h3>
                   {notifications.length > 0 && (
                     <button onClick={markAllRead} className="text-[10px] font-medium text-blue-600 hover:text-blue-800 transition-colors">
                       Mark all read
@@ -210,17 +210,17 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
             </button>
 
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50">
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-xs font-semibold text-gray-900 truncate">{user?.displayName || 'User'}</p>
-                  <p className="text-[10px] text-gray-500 truncate">{user?.email}</p>
+              <div className="absolute right-0 mt-2 w-48 bg-[var(--sb-surface)] rounded-lg shadow-xl border border-[var(--sb-border)] py-1 z-50">
+                <div className="px-4 py-2 border-b border-[var(--sb-border)]">
+                  <p className="text-xs font-semibold text-[var(--sb-text)] truncate">{user?.displayName || 'User'}</p>
+                  <p className="text-[10px] text-[var(--sb-text-muted)] truncate">{user?.email}</p>
                 </div>
                 <div className="py-1">
                   {PROFILE_NAV_ITEMS.map((item) => (
                     <button 
                       key={item.name}
                       onClick={() => { onNavigate(item.name); setShowProfileMenu(false); }} 
-                      className="w-full flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors"
+                      className="w-full flex items-center gap-2 px-4 py-2 text-xs text-[var(--sb-text)] hover:bg-[var(--sb-surface-alt)] transition-colors"
                     >
                       <item.icon size={14} /> {item.name}
                     </button>
@@ -243,15 +243,15 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[100] lg:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-          <div className="absolute inset-y-0 left-0 w-72 bg-white shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
-            <div className="h-14 flex items-center justify-between px-4 border-b border-gray-100">
+          <div className="absolute inset-y-0 left-0 w-72 bg-[var(--sb-surface)] shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
+            <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--sb-border)]">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 bg-indigo-600 rounded-md flex items-center justify-center text-white">
                    <Sparkles size={16} />
                 </div>
-                <span className="text-lg font-bold text-gray-900 tracking-tight">StudyBuddy</span>
+                <span className="text-lg font-bold text-[var(--sb-text)] tracking-tight">StudyBuddy</span>
               </div>
-              <button onClick={() => setIsMobileMenuOpen(false)} className="p-1.5 hover:bg-gray-100 rounded-md text-gray-500">
+              <button onClick={() => setIsMobileMenuOpen(false)} className="p-1.5 hover:bg-[var(--sb-surface-alt)] rounded-md text-[var(--sb-text-muted)]">
                 <X size={20} />
               </button>
             </div>
@@ -262,36 +262,32 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
                   onClick={() => { onNavigate(item.name); setIsMobileMenuOpen(false); }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     activePage === item.name 
-                      ? 'bg-blue-50 text-blue-600' 
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-[var(--sb-accent-light)] text-[var(--sb-accent)]'
+                      : 'text-[var(--sb-text-muted)] hover:bg-[var(--sb-surface-alt)] hover:text-[var(--sb-text)]'
                   }`}
                 >
-                  <item.icon size={18} className={activePage === item.name ? 'text-blue-600' : 'text-gray-400'} />
+                  <item.icon size={18} className={activePage === item.name ? 'text-[var(--sb-accent)]' : 'text-[var(--sb-text-muted)]'} />
                   {item.name}
                 </button>
               ))}
             </div>
-            <div className="p-4 border-t border-gray-100 bg-gray-50">
+            <div className="p-4 border-t border-[var(--sb-border)] bg-[var(--sb-surface-alt)]">
               <div className="flex items-center gap-3 mb-4">
                 {user?.photoURL ? (
-                  <img
-                    className="h-10 w-10 rounded-full bg-gray-200 border border-gray-200 object-cover"
-                    src={user.photoURL}
-                    alt={user.displayName || 'User'}
-                  />
+                  <img className="h-10 w-10 rounded-full bg-gray-200 border border-[var(--sb-border)] object-cover" src={user.photoURL} alt={user.displayName || 'User'} />
                 ) : (
                   <div className="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 border border-indigo-200 shrink-0">
                     <UserIcon size={20} />
                   </div>
                 )}
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 truncate">{user?.displayName || 'User'}</p>
-                  <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                  <p className="text-sm font-semibold text-[var(--sb-text)] truncate">{user?.displayName || 'User'}</p>
+                  <p className="text-xs text-[var(--sb-text-muted)] truncate">{user?.email}</p>
                 </div>
               </div>
               <button 
                 onClick={onSignOut}
-                className="w-full flex items-center justify-center gap-2 py-2 bg-white border border-gray-200 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2 bg-[var(--sb-surface)] border border-[var(--sb-border)] rounded-lg text-xs font-medium text-[var(--sb-text)] hover:bg-[var(--sb-surface-alt)] transition-colors"
               >
                 <LogOut size={14} /> Sign Out
               </button>
@@ -302,16 +298,16 @@ const Header: React.FC<HeaderProps> = ({ activePage, onNavigate, user, onSignOut
 
       {/* Mobile Search Overlay */}
       {isSearchOverlayOpen && (
-        <div className="fixed inset-0 z-[110] bg-white animate-in fade-in zoom-in-95 duration-200">
-          <div className="h-14 flex items-center px-4 gap-3 border-b border-gray-100">
-            <Search size={18} className="text-gray-400" />
+        <div className="fixed inset-0 z-[110] bg-[var(--sb-surface)] animate-in fade-in zoom-in-95 duration-200">
+          <div className="h-14 flex items-center px-4 gap-3 border-b border-[var(--sb-border)]">
+            <Search size={18} className="text-[var(--sb-text-muted)]" />
             <input 
               type="text" 
               autoFocus
               placeholder="Search notes, tests, communities..." 
-              className="flex-1 bg-transparent border-none outline-none text-sm text-gray-900"
+              className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--sb-text)] placeholder:text-[var(--sb-text-muted)]"
             />
-            <button onClick={() => setIsSearchOverlayOpen(false)} className="p-1.5 hover:bg-gray-100 rounded-md text-gray-500">
+            <button onClick={() => setIsSearchOverlayOpen(false)} className="p-1.5 hover:bg-[var(--sb-surface-alt)] rounded-md text-[var(--sb-text-muted)]">
               <X size={20} />
             </button>
           </div>

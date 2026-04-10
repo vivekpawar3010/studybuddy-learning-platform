@@ -21,34 +21,46 @@ export default defineConfig(({ mode }) => {
         }
       },
       build: {
-        chunkSizeWarningLimit: 800,
+        // Main app bundle is large; 2MB threshold avoids noise on a feature-rich SPA
+        chunkSizeWarningLimit: 2000,
         rollupOptions: {
           output: {
-            manualChunks: {
-              'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-              'vendor-firebase': ['firebase/app', 'firebase/auth'],
-              'vendor-supabase': ['@supabase/supabase-js'],
-              'vendor-tiptap': [
-                '@tiptap/react',
-                '@tiptap/starter-kit',
-                '@tiptap/extension-color',
-                '@tiptap/extension-highlight',
-                '@tiptap/extension-image',
-                '@tiptap/extension-link',
-                '@tiptap/extension-placeholder',
-                '@tiptap/extension-table',
-                '@tiptap/extension-table-cell',
-                '@tiptap/extension-table-header',
-                '@tiptap/extension-table-row',
-                '@tiptap/extension-text-align',
-                '@tiptap/extension-text-style',
-              ],
-              'vendor-ai': ['@google/genai'],
-              'vendor-ui': ['framer-motion', 'lucide-react', 'recharts'],
-            }
+            manualChunks(id: string) {
+              // React + Router
+              if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
+                return 'vendor-react';
+              }
+              // Firebase
+              if (id.includes('node_modules/firebase')) {
+                return 'vendor-firebase';
+              }
+              // Supabase
+              if (id.includes('node_modules/@supabase')) {
+                return 'vendor-supabase';
+              }
+              // TipTap — isolated so it never pulls framer-motion or lucide
+              if (id.includes('node_modules/@tiptap')) {
+                return 'vendor-tiptap';
+              }
+              // Google AI SDK
+              if (id.includes('node_modules/@google/genai')) {
+                return 'vendor-ai';
+              }
+              // Animation library — separate from tiptap to break circular dep
+              if (id.includes('node_modules/framer-motion')) {
+                return 'vendor-motion';
+              }
+              // Icon library — separate chunk
+              if (id.includes('node_modules/lucide-react')) {
+                return 'vendor-icons';
+              }
+              // Charts
+              if (id.includes('node_modules/recharts') || id.includes('node_modules/d3')) {
+                return 'vendor-charts';
+              }
+            },
           }
         }
       }
     };
 });
-

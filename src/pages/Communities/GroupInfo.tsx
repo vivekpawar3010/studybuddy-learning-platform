@@ -144,7 +144,7 @@ const GroupInfo: React.FC<GroupInfoProps> = ({
     setSavingEdit(true);
     setEditError(null);
     try {
-      let avatar_url: string | null = undefined;
+      let avatar_url: string | null = null;
       
       if (avatarFile) {
         const fileExt = avatarFile.name.split('.').pop();
