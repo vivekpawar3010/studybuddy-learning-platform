@@ -149,7 +149,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGci...
 npm run dev
 ```
 
-Open **[http://localhost:5173](http://localhost:5173)** 🎉
+Open **[http://localhost:3000](http://localhost:3000)** 🎉
 
 ---
 
@@ -310,7 +310,7 @@ Normal app
 ## 🧪 Available Scripts
 
 ```bash
-npm run dev       # Start dev server → http://localhost:5173
+npm run dev       # Start dev server → http://localhost:3000
 npm run build     # Production build → ./dist
 npm run preview   # Preview the production build locally
 npm run lint      # TypeScript type check (zero-error gate)

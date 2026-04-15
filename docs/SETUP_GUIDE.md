@@ -312,13 +312,13 @@ You will see output like:
 ```
   VITE v6.x.x  ready in 400 ms
 
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: http://192.168.x.x:5173/
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: http://192.168.x.x:3000/
 ```
 
 ### 10.3 Open in Browser
 
-Open your browser and go to: **http://localhost:5173**
+Open your browser and go to: **http://localhost:3000**
 
 The StudyBuddy login screen will appear.
 
@@ -421,7 +421,7 @@ Use this checklist to confirm everything is set up correctly before running the 
 | 13 | `.env` file created from `.env.example` | ☐ |
 | 14 | All 8 values filled in `.env` file | ☐ |
 | 15 | `npm install` completed successfully | ☐ |
-| 16 | `npm run dev` running — app opens on http://localhost:5173 | ☐ |
+| 16 | `npm run dev` running — app opens on http://localhost:3000 | ☐ |
 | 17 | Created an account and selected a role | ☐ |
 
 ---

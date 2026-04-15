@@ -61,7 +61,7 @@ npm install
 # 2. Start the dev server
 npm run dev
 
-# 3. Open http://localhost:5173
+# 3. Open http://localhost:3000
 # Verify the Vite + React app mounts with routing shell.
 ```
 
