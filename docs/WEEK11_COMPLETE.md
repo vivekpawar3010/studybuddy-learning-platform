@@ -7,43 +7,41 @@
 
 ## 📋 Deliverables Completed
 
-### ✅ 1. Gamified Onboarding Wizard
-- **Location:** `frontend/src/components/onboarding/WizardModal.tsx`
+### ✅ 1. Interactive Onboarding Wizard
+- **Location:** `src/components/OnboardingWizard.tsx`, `src/services/onboarding-service.ts`
 - **Features:**
-  - With a feature set this dense, new users were overwhelmed. Built a 4-step interactive modal that only fires if the user's `profile.has_onboarded` flag is false.
-  - Walks them through their Dashboard, how to join Communities, where MyNotes are, and introduces the AI bot.
+  - A 4-step interactive modal that fires only once — when `profile.has_onboarded` is `false` in Supabase.
+  - Walks new users through: Dashboard overview, joining/creating a Community, using My Notes, and introducing the AI Tutor.
+  - Completion state stored in Supabase — clearing browser cache does not re-trigger the wizard.
 
-### ✅ 2. Contextual Hint Tooltips Overlay
-- **Location:** `frontend/src/components/ui/Hint.tsx`
+### ✅ 2. Contextual Hint Tooltips
+- **Location:** `src/components/HintTooltip.tsx`
 - **Features:**
-  - Created a robust absolute positioning engine utilizing Z-index tricks to highlight specific app sections (like creating a 'spotlight' effect in an otherwise darkened screen). It forces users' attention to key navigation buttons.
+  - Positioned tooltip overlays that highlight specific UI areas for new users.
+  - Uses absolute positioning with z-index layering to create a spotlight effect.
+  - Only shown to users identified as new (`isNewUser` flag from Supabase).
 
-### ✅ 3. Link Security Polish
-- **Location:** `frontend/src/utils/dom.ts`
+### ✅ 3. Loading Screen
+- **Location:** `src/components/LoadingScreen.tsx`
 - **Features:**
-  - Enforced a platform-wide rule ensuring all external anchor tags open safely in new tabs using `target="_blank" rel="noopener noreferrer"`. This was a critical audit finding.
+  - Lottie-animated splash screen shown while auth state resolves.
+  - Prevents any content flash before the user is confirmed as authenticated.
 
----
-
-## 🔧 Additional Work Completed
-
-### ✅ General Bug Squashing
-- **Status:** Dedicated a few days to fixing weird CSS overflow bugs on mobile views, specifically dealing with standardizing the padding across the Settings and Tests tabs.
+### ✅ 4. Link Security Audit
+- **Status:** All external anchor tags across the codebase audited and updated to use `target="_blank" rel="noopener noreferrer"` to prevent tabnabbing attacks.
 
 ---
 
 ## 📁 File Structure
 
 ```
-frontend/
-├── src/
-│   ├── components/
-│   │   ├── onboarding/
-│   │   │   └── WizardModal.tsx     # ✅ Multi-step welcome
-│   │   └── ui/
-│   │       └── Hint.tsx            # ✅ Spotlight highlight engine
-│   └── utils/
-│       └── dom.ts                  # ✅ Link safety interceptor
+src/
+├── components/
+│   ├── OnboardingWizard.tsx    # ✅ Multi-step first-run wizard
+│   ├── HintTooltip.tsx         # ✅ Spotlight hint overlays
+│   └── LoadingScreen.tsx       # ✅ Lottie splash screen
+└── services/
+    └── onboarding-service.ts   # ✅ Supabase onboarding state
 ```
 
 ---
@@ -52,17 +50,17 @@ frontend/
 
 ### Verify Features
 ```bash
-# 1. Sign up a completely fresh test account.
-# 2. You will be immediately locked into the Onboarding Wizard on login.
-# 3. Click 'Next' through the phases and observe the spotlighting effects.
-# 4. Once complete, verify it never appears again on subsequent logins.
+# 1. Create a completely fresh account
+# 2. Verify the Onboarding Wizard appears on first login
+# 3. Click through all 4 steps
+# 4. Logout and login again — verify the wizard does NOT reappear
 ```
 
 ---
 
 ## 🔒 Security Features
-1. **Phishing Protection:** The `noopener noreferrer` pass drastically reduces vectors for tabnabbing, a common exploit if users click malicious links dumped in community chat rooms.
-2. **State Protection:** The onboarding boolean is stored in the database, meaning users can't simply clear their local cookies to accidentally re-trigger the confusing loop.
+1. **DB-Persisted State:** Onboarding flag stored in Supabase — cannot be bypassed by clearing local storage.
+2. **Link Safety:** All external links enforced with `rel="noopener noreferrer"`.
 
 ---
 
@@ -70,8 +68,8 @@ frontend/
 
 | Component | Technology | Version |
 |-----------|------------|---------|
-| Core Tooling | DOM Portals | - |
-| Overlays | CSS Backdrops | - |
+| Animations | @lottiefiles/dotlottie-react | 0.18.10 |
+| Database | Supabase | 2.101.1 |
 
 ---
 
@@ -79,30 +77,25 @@ frontend/
 
 | Test | Status | Evidence |
 |------|--------|----------|
-| State Flags | ✅ Ready | Verified `UPDATE profiles` SQL triggers accurately on wizard finish |
-| Screen Overflows | ✅ Ready | Z-index stacks don't incorrectly clip on extremely narrow mobile devices |
+| First-Run Trigger | ✅ Ready | Wizard fires only on first login |
+| Repeat Prevention | ✅ Ready | Wizard never re-appears after completion |
+| Loading Screen | ✅ Ready | Lottie animation plays during auth resolution |
 
 ---
 
 ## 🐛 Known Limitations
-1. The spotlight tooltips must be manually dismissed by clicking 'got it'. There isn't an 'Escape key' listener attached currently.
-2. Wizard graphics are currently basic SVGs, lacking high-end custom illustrations.
+1. Hint tooltips must be dismissed by clicking "Got it" — no Escape key listener yet.
 
 ---
 
 ## 📝 Next Steps (Week 12+)
-1. Execute the final database seed data script.
-2. Ensure build stability.
-3. Perform end-to-end full system checks for deployment.
-
----
-
-## 📚 Documentation Files
-1. **WEEK11_COMPLETE.md** - Complete week rundown.
+1. Final database seed data script.
+2. TypeScript strict mode audit.
+3. Production build verification.
 
 ---
 
 ## ✨ Summary
-Week 11 ensured that our sweeping, incredibly technical feature-set remains deeply accessible and welcoming to absolute beginners. It drastically lowers the initial friction, converting sign-ups into power users much faster.
+Week 11 ensured the platform is accessible and welcoming to brand-new users. The wizard and hints dramatically lower initial friction, while the loading screen removes any jarring auth flash on startup.
 
 **Status: READY FOR WEEK 12 DEVELOPMENT** ✅

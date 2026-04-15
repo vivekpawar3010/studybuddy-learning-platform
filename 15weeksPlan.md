@@ -30,13 +30,16 @@ This document outlines the week-by-week plan to develop StudyBuddy from MVP to a
 ## Repo Structure
 
 ```text
-/                   # Project root
-├── /frontend       # Main React App (Vite base)
-│   ├── /src        # Components, hooks, utilities
-│   ├── /docs       # Comprehensive weekly logs & exports
-│   └── /scripts    # Helper python automation scripts
-├── /database       # Raw SQL schemas and seeding
-└── .env            # Environment secrets (IGNORED IN GIT)
+studybuddy-learning-platform/
+├── src/
+│   ├── components/      # Shared UI components
+│   ├── contexts/        # Theme + Notification contexts
+│   ├── pages/           # All route-level page modules
+│   └── services/        # Supabase, Firebase, Gemini AI
+├── docs/                # Weekly completion reports
+├── public/animations/   # Lottie animation assets
+├── .env.example         # Safe env template
+└── supabase_schema.sql  # Full DB schema (local only)
 ```
 
 ---
@@ -104,7 +107,7 @@ This document outlines the week-by-week plan to develop StudyBuddy from MVP to a
 **Deliverables:** Fully functioning LLM assistant with markdown streaming.
 
 ### Week 11 — Onboarding System & Polish
-* Develop a gamified step-by-step Onboarding phase that highlights specific screen areas using Z-index overlays.
+* Develop a step-by-step interactive Onboarding Wizard that highlights specific screen areas using Z-index overlays.
 * Perform sweeping `<a target="_blank" rel="noopener noreferrer">` safety rewrites across the codebase.
 **Deliverables:** User-friendly first-time login experience.
 
@@ -118,9 +121,10 @@ This document outlines the week-by-week plan to develop StudyBuddy from MVP to a
 * Render success percentage distributions via Recharts.
 **Deliverables:** Educator Insights.
 
-### Week 14 — Gamification (Planned)
-* Implement automated Streaks, daily study goals, and Badges to incentivize consistent platform usage.
-**Deliverables:** Gamified student progression mechanics.
+### Week 14 — Theme Engine & UI Polish (Complete)
+* Implement a 6-theme engine (Basic, Light, Dark, Aurora, Nebula, Geometric) with live animated backgrounds.
+* Refine all CSS variables for deep UI consistency and mobile responsiveness.
+**Deliverables:** Global theme system with localStorage persistence, smooth transitions, and animated backgrounds per theme.
 
 ### Week 15 — Final Deployment (Planned)
 * Final edge caching strategies.

@@ -7,41 +7,36 @@
 
 ## 📋 Deliverables Completed
 
-### ✅ 1. Add Members & Global Search Interface
-- **Location:** `frontend/src/components/community/AddMemberModal.tsx`
+### ✅ 1. Add Members Modal
+- **Location:** `src/pages/Communities/AddMembersModal.tsx`
 - **Features:**
-  - Built an intensive search modal. Admins can search via email or exact username.
-  - Implemented an input debouncer (`useDebounce` hook) so we don't bombard the Supabase backend with an API request for every single keystroke. It waits 400ms after typing stops before firing.
-  - Shows an elegant skeleton loading state while the database query resolves.
+  - Real-time username search using debounced Supabase text queries.
+  - Prevents spam API calls with a 350ms debounce on keystrokes.
+  - Displays search results with user avatar and email.
+  - One-click invite: adds users directly to the `community_members` table.
 
-### ✅ 2. Group Administrative Actions
-- **Location:** `frontend/src/app/community/settings/[groupId]/page.tsx`
+### ✅ 2. Group Info & Settings Panel
+- **Location:** `src/pages/Communities/GroupInfo.tsx`
 - **Features:**
-  - Full suite of controls for group leaders: update the group banner image, rename the group, or alter the description.
-  - 'Remove Member' functionality with a confirmation modal so admins don't accidentally kick people.
-  - Integrated React Toastify for successful, satisfying notification popups after an action completes.
+  - View and edit group name, description, and avatar image (uploaded to Supabase Storage).
+  - View full member list with roles (`admin` / `member`).
+  - Admin can remove members or transfer admin rights.
+  - Generate and display QR code for the invite link.
 
----
-
-## 🔧 Additional Work Completed
-
-### ✅ Advanced PostgreSQL Functions
-- **Files:** `database/search.sql`
-- **Status:** Standard `ILIKE` queries were getting a bit slow. Created a Postgres function specifically tailored for rapid, indexed lookup of profiles.
+### ✅ 3. Command Palette
+- **Location:** `src/components/Header.tsx`
+- **Features:**
+  - `Ctrl+K` / `Cmd+K` opens a global command palette.
+  - Navigate to any page directly by typing its name.
 
 ---
 
 ## 📁 File Structure
 
 ```
-frontend/
-├── src/
-│   ├── app/community/settings/
-│   │   └── [groupId]/page.tsx      # ✅ Admin dashboard logic
-│   └── components/community/
-│       ├── AddMemberModal.tsx      # ✅ Complex search input
-│       ├── MemberListRow.tsx       # ✅ Kick/Edit actions
-│       └── LoadingSkeletons.tsx    # ✅ Shimmer loading blocks
+src/pages/Communities/
+├── AddMembersModal.tsx         # ✅ Search + invite users
+└── GroupInfo.tsx               # ✅ Group settings + member management
 ```
 
 ---
@@ -50,16 +45,18 @@ frontend/
 
 ### Verify Features
 ```bash
-# 1. As a group admin, go to Community Settings.
-# 2. Start typing a name in 'Invite Member'. Observe the 400ms delay before fetching.
-# 3. Add the member, then click the 'Kick' icon, and approve the confirmation dialog.
+# 1. Open a community you administer
+# 2. Click Group Info → Members → Add Members
+# 3. Search for another user's username
+# 4. Click Add → verify they appear in the member list
+# 5. Press Ctrl+K — verify the command palette opens
 ```
 
 ---
 
 ## 🔒 Security Features
-1. **Elevated Privileges:** The `community/settings` route utilizes an effect to forcibly reject any user ID that does not possess `role = 'admin'` for the attached `group_id`.
-2. **Opt-Out Checking:** The SQL function respects privacy flags; users who have 'discoverable: false' will naturally never appear in global search results.
+1. **Admin-only Gating:** Member management UI only renders for users with `userRole === 'admin'`.
+2. **Supabase RLS:** Non-admin members cannot modify `community_members` directly.
 
 ---
 
@@ -67,8 +64,9 @@ frontend/
 
 | Component | Technology | Version |
 |-----------|------------|---------|
-| Database | PostgreSQL Custom Functions | - |
-| Notifications | Custom Toast System | - |
+| Database Search | Supabase ilike query | 2.101.1 |
+| File Storage | Supabase Storage | 2.101.1 |
+| QR Codes | qrcode.react | 4.2.0 |
 
 ---
 
@@ -76,29 +74,20 @@ frontend/
 
 | Test | Status | Evidence |
 |------|--------|----------|
-| Debouncer Efficiency | ✅ Ready | DevTools Network tab shows 1 request per query, not 15 |
-| Privilege Escalation | ✅ Ready | Standard users get HTTP 403 when trying to hit kick endpoints |
-
----
-
-## 🐛 Known Limitations
-1. Search functionality is strictly absolute right now (doesn't handle typos or fuzzy distance matching like Elasticsearch would).
+| Username Search | ✅ Ready | Results appear with debounce |
+| Member Removal | ✅ Ready | Member removed from list and DB |
+| Avatar Upload | ✅ Ready | Group avatar updates in storage |
+| QR Code | ✅ Ready | QR scans to correct invite URL |
 
 ---
 
 ## 📝 Next Steps (Week 9+)
-1. Enhance MyNotes with draggable folders.
-2. Integrate a global platform notification bell.
-3. Clean up loose sizing bugs in the UI.
-
----
-
-## 📚 Documentation Files
-1. **WEEK8_COMPLETE.md** - Complete week rundown.
+1. Implement in-app notification system.
+2. Improve Notes sidebar with nested structure.
 
 ---
 
 ## ✨ Summary
-Week 8 focused entirely on giving power back to the user. Running a study group requires good administration tools, and the debounced global search feels incredibly modern and highly polished.
+Week 8 turned communities into fully managed collaborative spaces. Administrators now have precise control over membership, and the debounced search delivers a fast, low-cost user discovery experience.
 
 **Status: READY FOR WEEK 9 DEVELOPMENT** ✅

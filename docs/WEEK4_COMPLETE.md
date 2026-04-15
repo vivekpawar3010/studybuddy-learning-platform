@@ -1,4 +1,4 @@
-# Week 4 Completion Report — MyNotes & Rich Text Editor Integration
+# Week 4 Completion Report — MyNotes & Rich Text Editor
 
 **Date:** January 26, 2026  
 **Status:** ✅ **COMPLETE**
@@ -8,40 +8,47 @@
 ## 📋 Deliverables Completed
 
 ### ✅ 1. TipTap Rich Text Editor
-- **Location:** `frontend/src/components/editor/TipTapEditor.tsx`
+- **Location:** `src/pages/MyNotes/Editor.tsx`
 - **Features:**
-  - Selected `@tiptap/react` for its unopinionated headless architecture, allowing me to style it identically to our app.
-  - Implemented a custom toolbar containing Bold, Italic, Strikethrough, Underline, and Heading levels.
-  - Added complex extensions: Table integration (allowing row/column creation and manipulation) and Image parsing.
-  - Creating a floating popup menu (bubble menu) when text is highlighted for a Notion-like feel.
+  - Integrated TipTap v3 headless editor with a full formatting toolbar.
+  - Supports: bold, italic, underline, headings (H1–H3), bullet lists, ordered lists, blockquotes, code blocks, text alignment, highlight, colour picker.
+  - Tables with add/remove rows and columns.
+  - Image embedding via URL.
+  - Link insertion with `target="_blank"` enforcement.
 
-### ✅ 2. Live Note Saving & PDF Export
-- **Location:** `frontend/src/app/notes/page.tsx`
+### ✅ 2. Notebook Hierarchy
+- **Location:** `src/pages/MyNotes/MyNotes.tsx`, `src/pages/MyNotes/SidebarColumn.tsx`
 - **Features:**
-  - Used `useEffect` debouncing to simulate a Google-docs style "autosave" mechanism.
-  - Integrated `html2pdf.js` to allow a user to instantly generate standard PDF study guides directly from their HTML formatted notes. This was highly requested in the design notes.
+  - Three-level structure: **Notebooks → Sections → Pages**.
+  - Full CRUD for all three levels (create, rename, delete with confirmation dialog).
+  - Live sync to Supabase on every save.
+
+### ✅ 3. PDF Export
+- **Location:** `src/pages/MyNotes/Editor.tsx`
+- **Features:**
+  - One-click HTML-to-PDF export using `html2pdf.js`.
+  - Exports the rendered note content preserving all formatting.
 
 ---
 
 ## 🔧 Additional Work Completed
 
-### ✅ Nested DOM Styling Overrides
-- **Files:** `frontend/src/index.css`
-- **Status:** TipTap outputs raw HTML tags (like `<table>` and `<blockquote>`). Tailwind strips native styling, so I had to write a complex set of `.ProseMirror` targeting selectors to ensure the editor content actually looks formatted.
+### ✅ Note Content Auto-Save
+- **Status:** Note content is saved to the `notes_content` table in Supabase on each keypress with debouncing to prevent excessive API calls.
 
 ---
 
 ## 📁 File Structure
 
 ```
-frontend/
-├── src/
-│   ├── app/notes/
-│   │   └── page.tsx                # ✅ Notes listing and active view
-│   └── components/editor/
-│       ├── TipTapEditor.tsx        # ✅ The core word processor
-│       ├── Toolbar.tsx             # ✅ Formatting buttons
-│       └── FloatingMenu.tsx        # ✅ Notion-style context menu
+src/
+├── pages/MyNotes/
+│   ├── MyNotes.tsx             # ✅ Notebook browser + page manager
+│   ├── Editor.tsx              # ✅ TipTap editor + export
+│   ├── SidebarColumn.tsx       # ✅ Notebook/section/page tree
+│   └── AIPanel.tsx             # ✅ AI side-panel (added Week 10)
+└── services/
+    └── notes-service.ts        # ✅ Supabase CRUD for notes
 ```
 
 ---
@@ -50,16 +57,17 @@ frontend/
 
 ### Verify Features
 ```bash
-# 1. Navigate to the /notes route.
-# 2. Start typing. Highlight some text to see the floating menu appear.
-# 3. Create a 3x3 table and fill it with data.
-# 4. Hit the "Export PDF" button to download your work locally.
+# 1. Login and navigate to My Notes
+# 2. Create a new Notebook → Section → Page
+# 3. Type content using the formatting toolbar
+# 4. Click the PDF export button — verify download
 ```
 
 ---
 
 ## 🔒 Security Features
-1. **HTML Sanitization:** TipTap natively sanitizes HTML attributes, preventing malicious `<script>` injections if a user pastes bad data into the editor.
+1. **RLS Policies:** Supabase Row Level Security ensures users can only access their own notebooks.
+2. **Debounced Save:** Auto-save uses a 500ms debounce so rapid keystrokes do not overload the API.
 
 ---
 
@@ -67,8 +75,9 @@ frontend/
 
 | Component | Technology | Version |
 |-----------|------------|---------|
-| Editor Engine | TipTap Suite | 3.20.1 |
-| Export Tooling | html2pdf.js | 0.14.0 |
+| Rich Text Editor | TipTap | 3.20.1 |
+| PDF Export | html2pdf.js | 0.14.0 |
+| Database | Supabase | 2.101.1 |
 
 ---
 
@@ -76,31 +85,19 @@ frontend/
 
 | Test | Status | Evidence |
 |------|--------|----------|
-| Rich Text Formatting | ✅ Ready | Verified nested styling (Bold + Italic + H1) works |
-| Table Matrix | ✅ Ready | Added and deleted columns without breaking document flow |
-| Auto-save trigger | ✅ Ready | Debouncer successfully waits 1000ms after last keystroke |
-
----
-
-## 🐛 Known Limitations
-1. Adding images currently resolves to a massive Base64 string in the DOM. This hurts performance for large images. I need to hook it into a Supabase storage bucket later to hold physical blobs.
-2. Collaborative editing is not enabled (it's single-user per note for now).
+| CRUD Operations | ✅ Ready | Create/rename/delete verified across all 3 hierarchy levels |
+| Auto-save | ✅ Ready | Content persists after page reload |
+| PDF Export | ✅ Ready | PDF downloads with correct formatting |
 
 ---
 
 ## 📝 Next Steps (Week 5+)
-1. Scaffold the Community & Messaging features.
-2. Hook into Supabase Realtime for WebSocket chat.
-3. Build the Group administration view.
-
----
-
-## 📚 Documentation Files
-1. **WEEK4_COMPLETE.md** - Complete week rundown.
+1. Build the real-time Communities chat module.
+2. Design Supabase schema for groups and messages.
 
 ---
 
 ## ✨ Summary
-Week 4 delivered a tremendously powerful word-processing capability. Students can now actually write serious, formatted coursework directly within the platform. The UI integration feels seamless thanks to TipTap's flexibility.
+Week 4 delivered a professional-grade note-taking experience. TipTap provides a Word-like editing environment directly in the browser, while Supabase handles persistence seamlessly.
 
 **Status: READY FOR WEEK 5 DEVELOPMENT** ✅

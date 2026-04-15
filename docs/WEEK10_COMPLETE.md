@@ -7,41 +7,51 @@
 
 ## 📋 Deliverables Completed
 
-### ✅ 1. Study Assistant Chat Widget
-- **Location:** `frontend/src/components/ai/StudyBot.tsx`
+### ✅ 1. AI Tutor — Multi-Session Chat
+- **Location:** `src/pages/AITutor.tsx`
 - **Features:**
-  - Implemented the highly anticipated `@google/genai` integration. Created a Floating Action Button (FAB) in the corner of the app that expands into a conversational AI window.
-  - Enabled answer streaming chunks. The bot doesn't hang for 10 seconds and spit out a wall of text; it types it out fluidly in real-time, just like standard ChatGPT.
+  - Dedicated full-page AI chat interface powered by Google Gemini (`gemini-2.0-flash`).
+  - Multiple saved chat sessions, each persisted in `localStorage` (up to 30 sessions).
+  - **General mode:** Ask any academic question.
+  - **Note-context mode:** Attach any of your notes — AI answers based on that note's content.
+  - Conversation history (last 10 messages) sent with each request for contextual responses.
 
-### ✅ 2. Context-Aware Prompt Bridging
-- **Location:** `frontend/src/lib/gemini.ts`
+### ✅ 2. Notes AI Side-Panel
+- **Location:** `src/pages/MyNotes/AIPanel.tsx`
 - **Features:**
-  - Wrote intelligent context injection. If a user opens the AI while inside a specific Quiz or examining a Note, the system silently grabs that text and prepends it to the API call. Now the AI knows exactly what the student is struggling with.
+  - Collapsible AI assistant panel within the Notes editor.
+  - Note content automatically injected as system context.
+  - Quick-action buttons: **Summarize**, **Flashcards**, **Simplify**, **Quiz**.
+  - Markdown rendering of AI responses with syntax-highlighted code blocks.
 
-### ✅ 3. Markdown Formatting Pipeline
-- **Location:** `frontend/src/components/ai/MessageRender.tsx`
+### ✅ 3. Shared Gemini Service with Dual-Key Rotation
+- **Location:** `src/services/gemini.ts`
 - **Features:**
-  - Wired up `react-markdown` and `react-syntax-highlighter`. When the AI dumps complex code or math formatting, our UI beautifully color-codes and structures it instead of displaying raw text blocks.
+  - Both AI Tutor and Notes AI Panel use a single shared service.
+  - Supports two API keys — if Key 1 hits quota, Key 2 is used automatically.
+  - Proper `user`/`model` alternating role format required by Gemini API v1.x.
+  - Descriptive error messages for quota, safety, and key errors.
 
----
-
-## 🔧 Additional Work Completed
-
-### ✅ Rate Limiting & Fail-safes
-- **Status:** The Google API has strict quotas. Wrote robust `try/catch` and degradation components. If the API returns a 429 Error, the UI gracefully apologizes and provides an ETA instead of crashing the site.
+### ✅ 4. Markdown Rendering Pipeline
+- **Location:** `src/components/CodeBlock.tsx`
+- **Features:**
+  - `react-markdown` + `remark-gfm` renders all AI output as formatted markdown.
+  - `react-syntax-highlighter` provides colour-coded code blocks.
 
 ---
 
 ## 📁 File Structure
 
 ```
-frontend/
-├── src/
-│   ├── components/ai/
-│   │   ├── StudyBot.tsx            # ✅ Floating widget panel
-│   │   └── MessageRender.tsx       # ✅ Complex markdown parsing
-│   └── lib/
-│       └── gemini.ts               # ✅ SDK payload config
+src/
+├── components/
+│   └── CodeBlock.tsx           # ✅ Syntax-highlighted code renderer
+├── pages/
+│   ├── AITutor.tsx             # ✅ Multi-session Gemini chat
+│   └── MyNotes/
+│       └── AIPanel.tsx         # ✅ Note-context AI side-panel
+└── services/
+    └── gemini.ts               # ✅ Shared API service with key rotation
 ```
 
 ---
@@ -50,16 +60,23 @@ frontend/
 
 ### Verify Features
 ```bash
-# 1. Click the AI icon in the bottom right.
-# 2. Ask "Can you explain photosynthesis?"
-# 3. Watch the text stream beautifully, with syntax highlighted if code is requested.
+# AI Tutor:
+# 1. Navigate to AI Tutor
+# 2. Ask "Explain Newton's second law step by step"
+# 3. Observe markdown-formatted response with code if relevant
+
+# Notes AI Panel:
+# 1. Open any note in My Notes
+# 2. Click the AI panel button (right side)
+# 3. Click "Summarize" — verify it summarizes the current note content
 ```
 
 ---
 
 ## 🔒 Security Features
-1. **Key Obfuscation:** The API key is securely piped directly through environment variables, absolutely guaranteeing it never leaks into the frontend bundle source maps.
-2. **System Prompt Hardening:** Enforced a hidden system prompt demanding the AI remains polite, educational, and refuses to discuss harmful topics.
+1. **Key via Environment Variable:** API key read from `VITE_GOOGLE_AI_API_KEY` — never hardcoded.
+2. **System Prompt Hardening:** System instruction constrains AI to educational, safe responses.
+3. **Dual-Key Fallback:** Prevents complete AI outage when one key hits quota.
 
 ---
 
@@ -67,9 +84,10 @@ frontend/
 
 | Component | Technology | Version |
 |-----------|------------|---------|
-| AI Pipeline | @google/genai | 1.45.0 |
-| Markdown Rendering | React-Markdown | 10.1.0 |
-| Syntax Coloring | React-Syntax-Highlighter | 16.1.1 |
+| AI SDK | @google/genai | 1.45.0 |
+| Markdown | react-markdown | 10.1.0 |
+| GFM Support | remark-gfm | 4.0.1 |
+| Syntax Highlighting | react-syntax-highlighter | 16.1.1 |
 
 ---
 
@@ -77,30 +95,20 @@ frontend/
 
 | Test | Status | Evidence |
 |------|--------|----------|
-| Fluid Streaming | ✅ Ready | Generator yields text blocks flawlessly without blocking main thread |
-| Fallback Degradation | ✅ Ready | Simulated 500 error shows the friendly apology component |
-
----
-
-## 🐛 Known Limitations
-1. Because this is a frontend-side call to a serverless edge, maintaining really long histories eats up contextual window limits quickly. It wipes history on hard reload.
-2. It cannot interpret images right now, solely text.
+| AI Response | ✅ Ready | Gemini returns well-formatted markdown |
+| Key Fallback | ✅ Ready | Key 2 used when Key 1 returns 429 |
+| Note Context | ✅ Ready | AI answers reference note content correctly |
+| Session Persistence | ✅ Ready | Chat history survives page reload |
 
 ---
 
 ## 📝 Next Steps (Week 11+)
-1. Build the Onboarding flows for brand new users.
-2. Implement specific interactive 'Hint' tooltips.
-3. Link security enforcement globally.
-
----
-
-## 📚 Documentation Files
-1. **WEEK10_COMPLETE.md** - Complete week rundown.
+1. Build onboarding wizard for first-time users.
+2. Implement contextual hint tooltips.
 
 ---
 
 ## ✨ Summary
-Week 10 completely transformed what StudyBuddy is. It is no longer just a management tool; it's an active, intelligent learning companion. Handling the streaming text state in React was tricky, but the immediate visual feedback pays huge dividends.
+Week 10 transformed StudyBuddy into an active AI learning companion. Both the AI Tutor and Notes AI Panel share a robust, production-grade Gemini service that handles quota gracefully and delivers high-quality markdown responses.
 
 **Status: READY FOR WEEK 11 DEVELOPMENT** ✅

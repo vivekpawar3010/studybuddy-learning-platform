@@ -7,44 +7,38 @@
 
 ## 📋 Deliverables Completed
 
-### ✅ 1. Complex Assessment Schema Definitions
-- **Location:** `database/assessments.sql`
+### ✅ 1. Teacher Test Builder
+- **Location:** `src/pages/TestsQuizzes.tsx` (teacher `view = 'builder'`)
 - **Features:**
-  - Fleshed out a robust set of relational tables: `Assessments`, `Questions`, `QuestionOptions` (for MCQs), and `Submissions`.
-  - Used foreign-key cascading so if a teacher deletes a Quiz, all its hundreds of underlying questions are cleanly wiped out automatically without leaving orphaned data.
+  - Teachers can create tests with a title, subject, topic, time limit, start/end dates, and visibility (public or access-code protected).
+  - Question types supported: **Multiple Choice**, **True/False**, **Short Answer**.
+  - Questions can be reordered, edited, and deleted within the builder.
+  - Tests saved to Supabase `tests` and `questions` tables.
 
-### ✅ 2. Test Creation Builder UI
-- **Location:** `frontend/src/app/tests/create/page.tsx`
+### ✅ 2. AI Question Generator
+- **Location:** `src/services/tests-service.ts` → `generateQuestionsWithAI()`
 - **Features:**
-  - Built a dynamic, deeply nested form array. Teachers can add multiple questions, and inside those questions, add multiple multiple-choice options.
-  - Implemented logic switching for "True/False" vs "Multiple Choice" variations.
-  - Added numeric scoring weights so some questions can be worth 5 points while others are worth 1.
+  - Teachers paste notes or topic text into the generator.
+  - Gemini AI produces multiple-choice questions with distractors and explanations.
+  - Generated questions are inserted directly into the test builder for review before saving.
 
-### ✅ 3. Global Assessment Repository
-- **Location:** `frontend/src/app/tests/global/page.tsx`
+### ✅ 3. Test Access Control
+- **Location:** `src/pages/TestsQuizzes.tsx`
 - **Features:**
-  - Created a searchable "bank" UI where educators can flag a test as "Public" to share it platform-wide with other groups.
-
----
-
-## 🔧 Additional Work Completed
-
-### ✅ Deep State Management
-- **Status:** Creating a 50-question quiz was lagging the React UI heavily when using standard `useState`. I refactored the test builder to utilize `useReducer` to safely and quickly dispatch object updates without triggering huge re-renders.
+  - **Public tests** visible to all students.
+  - **Code-protected tests** require students to enter a join code provided by the teacher.
+  - Teachers can copy the join code and share it directly.
 
 ---
 
 ## 📁 File Structure
 
 ```
-frontend/
-├── src/
-│   ├── app/tests/
-│   │   ├── create/page.tsx         # ✅ The Quiz Builder Hub
-│   │   └── global/page.tsx         # ✅ Public repository
-│   └── components/tests/
-│       ├── QuestionCard.tsx        # ✅ Individual question wrapper
-│       └── MCQOptions.tsx          # ✅ Dynamic options list
+src/
+├── pages/
+│   └── TestsQuizzes.tsx        # ✅ Full assessment system (teacher + student views)
+└── services/
+    └── tests-service.ts        # ✅ Supabase CRUD + Gemini AI question generation
 ```
 
 ---
@@ -53,17 +47,24 @@ frontend/
 
 ### Verify Features
 ```bash
-# 1. Navigate to Teacher Dashboard > Create Test.
-# 2. Add 2 Multiple Choice questions and 1 True/False question.
-# 3. Mark the correct radio answers.
-# 4. Hit save, and see it populate in the Global Repository list.
+# Teacher flow:
+# 1. Login as a teacher account
+# 2. Navigate to Tests & Quizzes
+# 3. Click "New Test" → fill in title, subject, duration
+# 4. Add questions manually or click "AI Generate"
+# 5. Publish and copy the access code
+
+# Student flow:
+# 1. Login as a student account
+# 2. Navigate to Tests & Quizzes
+# 3. Enter access code → start test
 ```
 
 ---
 
 ## 🔒 Security Features
-1. **Route Guarding:** Only users flagged with the 'educator' boolean in their profile can access the POST endpoints or UI to create tests.
-2. **Data Integrity:** Supabase constraints prevent a question from being saved without at least one option being flagged as `is_correct = true`.
+1. **Role Checks:** Test builder UI only renders for `role === 'teacher'`.
+2. **RLS Policies:** Students cannot modify test definitions — only read and submit attempts.
 
 ---
 
@@ -71,8 +72,8 @@ frontend/
 
 | Component | Technology | Version |
 |-----------|------------|---------|
-| Complex State | React useReducer | - |
-| Form Handling | Custom Controlled Components | - |
+| Database | Supabase PostgreSQL | 2.101.1 |
+| AI Generation | @google/genai | 1.45.0 |
 
 ---
 
@@ -80,30 +81,19 @@ frontend/
 
 | Test | Status | Evidence |
 |------|--------|----------|
-| Deep Form Nesting | ✅ Ready | Adding 10 options to a question works without UI freezing |
-| Schema Constraints | ✅ Ready | Cascade deletions function perfectly via raw SQL test |
-
----
-
-## 🐛 Known Limitations
-1. It currently strictly demands manual saving. If the teacher closes the tab halfway through making a 40 question test, it's totally lost.
-2. We don't support "essay" (freeform text) graded question logic yet.
+| Test Creation | ✅ Ready | Test and questions persist in Supabase |
+| AI Generation | ✅ Ready | Gemini returns valid MCQ JSON |
+| Access Codes | ✅ Ready | Code entry correctly unlocks private tests |
 
 ---
 
 ## 📝 Next Steps (Week 7+)
-1. Build the student-facing test-taking environment.
-2. Implement secure timing limits.
-3. Integrate browser-locking anti-cheat methods.
-
----
-
-## 📚 Documentation Files
-1. **WEEK6_COMPLETE.md** - Complete week rundown.
+1. Build the student test-taking environment with anti-cheat features.
+2. Implement server-synced countdown timer.
 
 ---
 
 ## ✨ Summary
-Week 6 tackled the most complex data structures of the project. A quiz is highly relational and deep. The new `useReducer` form approach keeps performance snappy, and the schema is solid enough to handle thousands of permutations.
+Week 6 built the assessment backbone. Teachers now have a powerful tool to author, configure, and distribute tests, with AI-assisted question generation reducing preparation time significantly.
 
 **Status: READY FOR WEEK 7 DEVELOPMENT** ✅
