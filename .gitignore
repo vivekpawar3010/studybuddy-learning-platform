@@ -53,3 +53,10 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# ── Local-only DB & utility scripts (keep on disk, never push) ──
+supabase_schema.sql
+seed_data.sql
+fix_sql.cjs
+update_imports.cjs
+*.cjs
