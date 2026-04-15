@@ -2,28 +2,8 @@
 
 **Project:** StudyBuddy — AI-Powered Learning Platform  
 **Author:** Vivek Pawar  
-**Version:** 1.0  
 **Date:** April 2026
 
----
-
-## Table of Contents
-
-1. [Project Overview](#1-project-overview)
-2. [System Requirements](#2-system-requirements)
-3. [Step 1 — Install Node.js](#3-step-1--install-nodejs)
-4. [Step 2 — Clone the Repository](#4-step-2--clone-the-repository)
-5. [Step 3 — Get Your Google Gemini API Key](#5-step-3--get-your-google-gemini-api-key)
-6. [Step 4 — Create a Firebase Project](#6-step-4--create-a-firebase-project)
-7. [Step 5 — Create a Supabase Project](#7-step-5--create-a-supabase-project)
-8. [Step 6 — Set Up the Database Schema](#8-step-6--set-up-the-database-schema)
-9. [Step 7 — Configure Environment Variables](#9-step-7--configure-environment-variables)
-10. [Step 8 — Install Dependencies & Run](#10-step-8--install-dependencies--run)
-11. [Step 9 — First Login & Role Selection](#11-step-9--first-login--role-selection)
-12. [Troubleshooting](#12-troubleshooting)
-13. [Summary Checklist](#13-summary-checklist)
-
----
 
 ## 1. Project Overview
 
@@ -56,8 +36,7 @@ Before you begin, make sure your computer has:
 |---|---|---|
 | Node.js | 18.0 or higher | Run: `node --version` |
 | npm | 9.0 or higher | Run: `npm --version` |
-| Git | Any recent version | Run: `git --version` |
-| Internet connection | Required | — |
+| Internet connection | Required for first install | — |
 
 > **Note:** If you do not have Node.js installed, continue to Step 1. If you already have it, skip to Step 2.
 
@@ -81,28 +60,31 @@ Both commands should print a version number (e.g. `v20.11.0` and `10.2.4`).
 
 ---
 
-## 4. Step 2 — Clone the Repository
+## 4. Step 2 — Extract the Project Files
 
-1. Open your terminal
-2. Navigate to where you want to save the project (e.g. your Desktop):
+1. Locate the project ZIP file you received — it is named **`studybuddy-learning-platform.zip`**
+2. Right-click the ZIP file and choose:
+   - **Windows:** "Extract All..." → choose a destination folder (e.g. your Desktop) → click **"Extract"**
+   - **macOS:** Double-click the ZIP file — it extracts automatically
+3. After extraction, you will see a folder named **`studybuddy-learning-platform`**
+4. Open your terminal and navigate into the folder:
 
-```bash
-cd Desktop
-```
+   **Windows (Command Prompt or PowerShell):**
+   ```
+   cd Desktop\studybuddy-learning-platform
+   ```
 
-3. Clone the project:
+   **macOS / Linux:**
+   ```
+   cd Desktop/studybuddy-learning-platform
+   ```
 
-```bash
-git clone https://github.com/vivekpawar3010/studybuddy-learning-platform.git
-```
-
-4. Move into the project folder:
-
-```bash
-cd studybuddy-learning-platform
-```
-
-You should now see a list of files including `package.json`, `README.md`, and a `src` folder.
+5. Confirm you are in the right place — you should see a list of files:
+   ```
+   dir        (Windows)
+   ls         (macOS / Linux)
+   ```
+   You should see `package.json`, `README.md`, `src`, `docs`, and other project files.
 
 ---
 
@@ -407,7 +389,7 @@ Use this checklist to confirm everything is set up correctly before running the 
 | # | Task | Done? |
 |---|---|---|
 | 1 | Node.js 18+ installed | ☐ |
-| 2 | Repository cloned | ☐ |
+| 2 | ZIP file extracted into project folder | ☐ |
 | 3 | Google Gemini API Key obtained | ☐ |
 | 4 | Firebase project created | ☐ |
 | 5 | Firebase Email/Password authentication enabled | ☐ |
