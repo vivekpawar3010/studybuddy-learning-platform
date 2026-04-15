@@ -5,12 +5,12 @@ import {
   ChevronDown, ArrowLeft, Loader2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI } from '@google/genai';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
 import { auth } from '../services/firebase';
 import { supabase } from '../services/supabase';
+import { geminiGenerate, geminiErrorMessage, type GeminiMessage } from '../services/gemini';
 
 // ─── Types ─────────────────────────────────────────────────────
 interface Message {
@@ -38,10 +38,6 @@ interface NoteOption {
   notebookTitle: string;
   notebookColor: string;
 }
-
-// ─── AI client (singleton) ─────────────────────────────────────
-const getAI = () =>
-  new GoogleGenAI({ apiKey: import.meta.env.VITE_GOOGLE_AI_API_KEY ?? '' });
 
 const SYSTEM_INSTRUCTION =
   'You are StudyBuddy AI, an expert, encouraging, and highly pedagogical tutor. ' +
@@ -201,34 +197,28 @@ const AITutor: React.FC = () => {
   const generateResponse = async (prompt: string, sessionId: string, noteContent?: string) => {
     setIsTyping(true);
     try {
-      const ai = getAI();
       const sysInstr = noteContent
         ? NOTE_SYSTEM_INSTRUCTION(noteContent)
         : SYSTEM_INSTRUCTION;
 
-      // Build conversation history for context (last 10 msgs)
+      // Build typed GeminiMessage[] — history + new user message
       const session = sessions.find(s => s.id === sessionId);
       const history = (session?.messages ?? []).slice(-10);
-      const contextStr = history.map(m =>
-        `${m.role === 'user' ? 'Student' : 'Tutor'}: ${m.text}`
-      ).join('\n');
 
-      const fullPrompt = contextStr
-        ? `${contextStr}\nStudent: ${prompt}`
-        : prompt;
+      const messages: GeminiMessage[] = [
+        ...history.map(m => ({
+          role: (m.role === 'user' ? 'user' : 'model') as 'user' | 'model',
+          text: m.text,
+        })),
+        { role: 'user' as const, text: prompt },
+      ];
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-1.5-flash',
-        config: {
-          systemInstruction: sysInstr,
-        },
-        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
-      });
+      const { text } = await geminiGenerate({ messages, systemInstruction: sysInstr });
 
       const aiMsg: Message = {
         id: `ai-${Date.now()}`,
         role: 'ai',
-        text: response.text ?? "I couldn't generate a response. Please try again.",
+        text,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
@@ -237,14 +227,12 @@ const AITutor: React.FC = () => {
           ? { ...s, messages: [...s.messages, aiMsg], lastUpdated: Date.now() }
           : s
       ));
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Gemini error:', err);
       const errMsg: Message = {
         id: `err-${Date.now()}`,
         role: 'ai',
-        text: err?.message?.includes('API_KEY')
-          ? '⚠️ Invalid or missing API key. Please check your `.env` file (`VITE_GOOGLE_AI_API_KEY`).'
-          : '⚠️ Sorry, something went wrong. Please try again.',
+        text: geminiErrorMessage(err),
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isError: true,
       };
@@ -257,6 +245,7 @@ const AITutor: React.FC = () => {
       setIsTyping(false);
     }
   };
+
 
   // ── Send message ──────────────────────────────────────────────
   const handleSend = (text: string = inputText.trim()) => {

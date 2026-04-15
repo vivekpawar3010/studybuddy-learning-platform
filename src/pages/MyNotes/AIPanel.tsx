@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Sparkles, Send, User, Bot, X, AlignLeft, Layers, Wand2, HelpCircle, Plus, Mic, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenAI } from "@google/genai";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../../components/CodeBlock';
+import { geminiGenerate, geminiErrorMessage, type GeminiMessage } from '../../services/gemini';
 
 interface AIPanelProps {
   isOpen: boolean;
@@ -49,36 +49,40 @@ const AIPanel: React.FC<AIPanelProps> = ({ isOpen, onClose, noteContent }) => {
   const handleSendMessage = async (customPrompt?: string) => {
     const input = customPrompt || chatInput;
     if (!input.trim()) return;
-    
+
     const userMsg = { role: 'user' as const, content: input };
     setMessages(prev => [...prev, userMsg]);
     setChatInput('');
     setIsTyping(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GOOGLE_AI_API_KEY });
-      const model = "gemini-3-flash-preview";
-      
-      const systemInstruction = `You are StudyBuddy AI, a precise and educational study assistant. 
-      You must directly base your answers on the user's provided note context:
-      ---
-      ${noteContent}
-      ---
-      If the answer isn't in the notes, use your general knowledge but clarify that it's outside the provided text. Keep responses concise, highly structured, and easily readable for a narrow side-panel UI. Use bullet points and bold text for emphasis.`;
+      const systemInstruction = `You are StudyBuddy AI, a precise and educational study assistant.
+Directly base your answers on the user's provided note context:
+---
+${noteContent}
+---
+If the answer isn't in the notes, use your general knowledge but clarify it's outside the notes.
+Keep responses concise, structured, and readable in a narrow side-panel. Use bullet points and bold text.`;
 
-      const response = await ai.models.generateContent({
-        model,
-        contents: [...messages.map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] })), { role: 'user', parts: [{ text: input }] }],
-        config: {
-          systemInstruction,
-        }
-      });
+      // Build GeminiMessage[] — skip the initial greeting (model-first causes errors)
+      // Only include real back-and-forth messages (after first user msg)
+      const chatHistory: GeminiMessage[] = messages
+        .filter(m => !(m.role === 'assistant' && messages.indexOf(m) === 0)) // skip greeting
+        .map(m => ({
+          role: (m.role === 'user' ? 'user' : 'model') as 'user' | 'model',
+          text: m.content,
+        }));
 
-      const aiText = response.text || "I'm sorry, I couldn't generate a response.";
-      setMessages(prev => [...prev, { role: 'assistant', content: aiText }]);
-    } catch (error) {
+      const geminiMessages: GeminiMessage[] = [
+        ...chatHistory,
+        { role: 'user', text: input },
+      ];
+
+      const { text } = await geminiGenerate({ messages: geminiMessages, systemInstruction });
+      setMessages(prev => [...prev, { role: 'assistant', content: text }]);
+    } catch (error: unknown) {
       console.error('AI Error:', error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I encountered an error while processing your request. Please try again later." }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: geminiErrorMessage(error) }]);
     } finally {
       setIsTyping(false);
     }
