@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Auth from './pages/Auth';
+import VerifyEmail from './pages/VerifyEmail';
 import OnboardingWizard from './components/OnboardingWizard';
 import LoadingScreen from './components/LoadingScreen';
 import NotFound404 from './pages/NotFound404';
@@ -164,6 +165,11 @@ const AppContent: React.FC = () => {
   // ── Not logged in ────────────────────────────────────────────
   if (!user) {
     return <Auth onAuthSuccess={() => setLoading(true)} />;
+  }
+
+  // ── Email not verified ───────────────────────────────────────
+  if (!user.emailVerified) {
+    return <VerifyEmail user={user} onSignOut={handleSignOut} />;
   }
 
   // ── Role not yet set → one-time role picker ──────────────────

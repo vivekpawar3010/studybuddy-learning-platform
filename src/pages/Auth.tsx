@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signIn, signUp, signInWithGoogle } from '../services/firebase';
+import { signIn, signUp, signInWithGoogle, sendVerificationEmail } from '../services/firebase';
 import { GraduationCap, Mail, Lock, User, Sparkles, Chrome, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 interface AuthProps {
@@ -23,7 +23,8 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
       if (isLogin) {
         await signIn(email, password);
       } else {
-        await signUp(email, password);
+        const userCredential = await signUp(email, password);
+        await sendVerificationEmail(userCredential.user);
       }
       onAuthSuccess();
     } catch (err: any) {

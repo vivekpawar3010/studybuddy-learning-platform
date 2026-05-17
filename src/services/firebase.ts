@@ -7,7 +7,9 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  User
+  User,
+  sendEmailVerification,
+  reload
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -51,3 +53,15 @@ export const signOut = () => firebaseSignOut(auth);
  */
 export const onAuthChange = (callback: (user: User | null) => void) => 
   onAuthStateChanged(auth, callback);
+
+/**
+ * Send email verification to a user
+ */
+export const sendVerificationEmail = (user: User) => 
+  sendEmailVerification(user);
+
+/**
+ * Reload the user's data (useful for checking if emailVerified changed)
+ */
+export const reloadUser = (user: User) => 
+  reload(user);
